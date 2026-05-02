@@ -13,11 +13,21 @@ class User
     {
         $sql = "SELECT * FROM users WHERE email = :identifier OR phone = :identifier LIMIT 1";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([
-            ":identifier" => $identifier
-        ]);
+        $stmt->execute([":identifier" => $identifier]);
 
-        return $stmt->fetch();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function findByEmailOrPhoneOnly($email, $phone)
+    {
+        $stmt = $this->conn->prepare("
+            SELECT * FROM users
+            WHERE email = ? OR phone = ?
+            LIMIT 1
+        ");
+
+        $stmt->execute([$email, $phone]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function emailExists($email)
@@ -26,7 +36,16 @@ class User
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([":email" => $email]);
 
-        return $stmt->fetch() ? true : false;
+        return $stmt->fetch(PDO::FETCH_ASSOC) ? true : false;
+    }
+
+    public function phoneExists($phone)
+    {
+        $sql = "SELECT user_id FROM users WHERE phone = :phone LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([":phone" => $phone]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC) ? true : false;
     }
 
     public function createCustomer($data)
@@ -43,7 +62,8 @@ class User
             $stmtUser->execute([
                 ":full_name" => $data["full_name"],
                 ":email" => $data["email"],
-                ":password_hash" => password_hash($data["password"], PASSWORD_DEFAULT),
+                // ":password_hash" => password_hash($data["password"], PASSWORD_DEFAULT),
+                ":password_hash" => $data["password_hash"],
                 ":phone" => $data["phone"]
             ]);
 
@@ -65,10 +85,11 @@ class User
             $this->conn->commit();
 
             return [
-                "user_id" => $userId,
+                "user_id" => (int)$userId,
                 "full_name" => $data["full_name"],
                 "email" => $data["email"],
-                "phone" => $data["phone"]
+                "phone" => $data["phone"],
+                "role" => "customer"
             ];
 
         } catch (Exception $e) {
@@ -87,12 +108,40 @@ class User
                 u.phone,
                 u.created_at,
                 u.updated_at,
+                c.customer_id,
                 c.shipping_address,
                 c.receiver_name,
-                c.receiver_phone
+                c.receiver_phone,
+                c.customer_status
             FROM users u
             INNER JOIN customers c ON u.user_id = c.customer_id
             WHERE u.user_id = ?
+            LIMIT 1
+        ";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$user_id]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function findAdminById($user_id)
+    {
+        $sql = "
+            SELECT 
+                u.user_id,
+                u.full_name,
+                u.email,
+                u.phone,
+                u.created_at,
+                u.updated_at,
+                a.admin_id,
+                a.salary,
+                a.is_super_admin
+            FROM users u
+            INNER JOIN admins a ON u.user_id = a.admin_id
+            WHERE u.user_id = ?
+            LIMIT 1
         ";
 
         $stmt = $this->conn->prepare($sql);

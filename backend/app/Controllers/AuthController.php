@@ -29,6 +29,39 @@ class AuthController
         }
     }
 
+
+    public function loginCustomer()
+    {
+        try {
+            $data = json_decode(file_get_contents("php://input"), true);
+
+            $identifier = $data["identifier"] ?? "";
+            $password = $data["password"] ?? "";
+
+            $user = $this->authService->loginCustomer($identifier, $password);
+
+            ResponseHelper::success($user, "Đăng nhập customer thành công");
+        } catch (Exception $e) {
+            ResponseHelper::error($e->getMessage(), 400);
+        }
+    }
+
+    public function loginAdmin()
+    {
+        try {
+            $data = json_decode(file_get_contents("php://input"), true);
+
+            $identifier = $data["identifier"] ?? "";
+            $password = $data["password"] ?? "";
+
+            $user = $this->authService->loginAdmin($identifier, $password);
+
+            ResponseHelper::success($user, "Đăng nhập admin thành công");
+        } catch (Exception $e) {
+            ResponseHelper::error($e->getMessage(), 400);
+        }
+    }
+
     public function register()
     {
         try {

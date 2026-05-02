@@ -1,24 +1,34 @@
-import { create } from 'zustand'
-import { type UserDataType } from '@/schema/user';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { type UserDataType } from "@/schema/user";
 
 interface UserStore {
-    user: UserDataType | null; // Chỉ lưu thông tin như name, email, avatar...
-    isAuthenticated: boolean;
-    login: (userData: any) => void;
-    logout: () => void;
+  user: UserDataType | null;
+  isAuthenticated: boolean;
+  login: (userData: UserDataType) => void;
+  logout: () => void;
 }
 
-export const useUserStore = create<UserStore>((set) => ({
-    user: null,
-    isAuthenticated: false,
+export const useUserStore = create<UserStore>()(
+  persist(
+    (set) => ({
+      user: null,
+      isAuthenticated: false,
 
-    login: (userData) => set({
-        user: userData,
-        isAuthenticated: true
-    }),
+      login: (userData) =>
+        set({
+          user: userData,
+          isAuthenticated: true,
+        }),
 
-    logout: () => set({
-        user: null,
-        isAuthenticated: false
+      logout: () =>
+        set({
+          user: null,
+          isAuthenticated: false,
+        }),
     }),
-}));
+    {
+      name: "user-storage",
+    }
+  )
+);
