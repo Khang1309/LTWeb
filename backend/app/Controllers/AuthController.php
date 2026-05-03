@@ -88,4 +88,17 @@ class AuthController
             ResponseHelper::error($e->getMessage(), 400);
         }
     }
+
+    public function getAdminProfile()
+    {
+        try {
+            $adminId = $_GET["admin_id"] ?? null;
+
+            $admin = $this->authService->getAdminProfile($adminId);
+
+            ResponseHelper::success($admin, "Lấy thông tin admin thành công");
+        } catch (Exception $e) {
+            ResponseHelper::error($e->getMessage(), 400);
+        }
+    }
 }

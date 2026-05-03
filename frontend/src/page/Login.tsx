@@ -2,37 +2,21 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { customerLoginApi } from "@/apis/authApi";
 import { useUserStore } from "@/store/userStore";
+import { useToast } from "@/hooks/useToast";
+import {
+  isRequired,
+  isValidPassword,
+  PASSWORD_MIN_LENGTH,
+} from "@/lib/validators";
 
 function Login() {
   const navigate = useNavigate();
   const login = useUserStore((s) => s.login);
 
+  const { toast, showToast } = useToast();
+
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-
-  const [toast, setToast] = useState({
-    show: false,
-    message: "",
-    type: "success" as "success" | "error",
-  });
-
-  const showToast = (
-    message: string,
-    type: "success" | "error" = "success"
-  ) => {
-    setToast({
-      show: true,
-      message,
-      type,
-    });
-
-    setTimeout(() => {
-      setToast((prev) => ({
-        ...prev,
-        show: false,
-      }));
-    }, 2500);
-  };
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -40,13 +24,16 @@ function Login() {
     const loginValue = identifier.trim();
     const passValue = password.trim();
 
-    if (!loginValue || !passValue) {
+    if (!isRequired(loginValue) || !isRequired(passValue)) {
       showToast("Vui lòng nhập đầy đủ thông tin.", "error");
       return;
     }
 
-    if (passValue.length < 6) {
-      showToast("Mật khẩu phải có ít nhất 6 ký tự.", "error");
+    if (!isValidPassword(passValue)) {
+      showToast(
+        `Mật khẩu phải có ít nhất ${PASSWORD_MIN_LENGTH} ký tự.`,
+        "error"
+      );
       return;
     }
 
@@ -56,16 +43,17 @@ function Login() {
         password: passValue,
       });
 
-      if (data.success) {
-        login(data.data);
-        showToast("Đăng nhập thành công.", "success");
-
-        setTimeout(() => {
-          navigate("/");
-        }, 800);
-      } else {
+      if (!data.success) {
         showToast(data.message || "Đăng nhập thất bại.", "error");
+        return;
       }
+
+      login(data.data);
+      showToast("Đăng nhập thành công.", "success");
+
+      setTimeout(() => {
+        navigate("/");
+      }, 800);
     } catch (err: any) {
       showToast(
         err.response?.data?.message || "Không kết nối được server.",

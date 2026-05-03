@@ -218,4 +218,60 @@ class CustomerController
             ]);
         }
     }
+
+
+    public function getAllCustomersForAdmin()
+    {
+        try {
+            $q = $_GET["q"] ?? "";
+            $page = $_GET["page"] ?? 1;
+            $limit = $_GET["limit"] ?? 10;
+
+            $data = $this->userModel->getAllCustomers($q, $page, $limit);
+
+            echo json_encode([
+                "success" => true,
+                "message" => "Lấy danh sách khách hàng thành công",
+                "data" => $data
+            ], JSON_UNESCAPED_UNICODE);
+
+        } catch (Throwable $e) {
+            http_response_code(500);
+            echo json_encode([
+                "success" => false,
+                "message" => $e->getMessage()
+            ], JSON_UNESCAPED_UNICODE);
+        }
+    }
+
+    public function updateCustomerStatus()
+    {
+        try {
+            $customerId = $_GET["id"] ?? 0;
+
+            $data = json_decode(file_get_contents("php://input"), true);
+
+            $status = $data["status"] ?? null;
+            $adminId = $data["admin_id"] ?? null;
+
+            $result = $this->userModel->updateCustomerStatus(
+                $customerId,
+                $status,
+                $adminId
+            );
+
+            if (!$result["success"]) {
+                http_response_code(403);
+            }
+
+            echo json_encode($result, JSON_UNESCAPED_UNICODE);
+
+        } catch (Throwable $e) {
+            http_response_code(500);
+            echo json_encode([
+                "success" => false,
+                "message" => $e->getMessage()
+            ], JSON_UNESCAPED_UNICODE);
+        }
+    }
 }

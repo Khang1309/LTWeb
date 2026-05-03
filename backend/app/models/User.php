@@ -196,4 +196,130 @@ class User
 
         return $stmt->execute([$password_hash, $user_id]);
     }
+
+    public function updateAdminInfo($admin_id, $data)
+    {
+        $sql = "
+            UPDATE users
+            SET full_name = ?, phone = ?
+            WHERE user_id = ?
+        ";
+
+        $stmt = $this->conn->prepare($sql);
+
+        return $stmt->execute([
+            $data["full_name"],
+            $data["phone"],
+            $admin_id
+        ]);
+    }
+    public function isSuperAdmin($adminId)
+    {
+        $stmt = $this->conn->prepare("
+            SELECT is_super_admin
+            FROM admins
+            WHERE admin_id = ?
+        ");
+
+        $stmt->execute([(int)$adminId]);
+
+        return (int)$stmt->fetchColumn() === 1;
+    }
+
+    public function getAllCustomers($keyword = "", $page = 1, $limit = 10)
+    {
+        $page = max(1, (int)$page);
+        $limit = max(1, min(50, (int)$limit));
+        $offset = ($page - 1) * $limit;
+
+        $kw = "%" . trim($keyword) . "%";
+
+        $countSql = "
+            SELECT COUNT(*)
+            FROM customers c
+            JOIN users u ON c.customer_id = u.user_id
+            WHERE u.full_name LIKE ?
+            OR u.email LIKE ?
+            OR COALESCE(u.phone,'') LIKE ?
+            OR COALESCE(c.receiver_name,'') LIKE ?
+            OR COALESCE(c.receiver_phone,'') LIKE ?
+        ";
+
+        $stmt = $this->conn->prepare($countSql);
+        $stmt->execute([$kw,$kw,$kw,$kw,$kw]);
+        $total = (int)$stmt->fetchColumn();
+
+        $sql = "
+            SELECT
+                c.customer_id,
+                u.full_name,
+                u.email,
+                u.phone,
+                c.shipping_address,
+                c.receiver_name,
+                c.receiver_phone,
+                c.customer_status,
+                u.created_at
+            FROM customers c
+            JOIN users u ON c.customer_id = u.user_id
+            WHERE u.full_name LIKE ?
+            OR u.email LIKE ?
+            OR COALESCE(u.phone,'') LIKE ?
+            OR COALESCE(c.receiver_name,'') LIKE ?
+            OR COALESCE(c.receiver_phone,'') LIKE ?
+            ORDER BY c.customer_id DESC
+            LIMIT {$limit} OFFSET {$offset}
+        ";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$kw,$kw,$kw,$kw,$kw]);
+
+        return [
+            "items" => $stmt->fetchAll(PDO::FETCH_ASSOC),
+            "pagination" => [
+                "current_page" => $page,
+                "total_pages" => max(1, (int)ceil($total / $limit)),
+                "total_items" => $total,
+                "limit" => $limit
+            ]
+        ];
+    }
+
+
+    public function updateCustomerStatus($customerId, $status, $adminId)
+    {
+        if (!$this->isSuperAdmin($adminId)) {
+            return [
+                "success" => false,
+                "message" => "Không đủ thẩm quyền"
+            ];
+        }
+
+        $status = (int)$status;
+
+        if (!in_array($status, [0, 1], true)) {
+            return [
+                "success" => false,
+                "message" => "Status không hợp lệ"
+            ];
+        }
+
+        $stmt = $this->conn->prepare("
+            UPDATE customers
+            SET customer_status = ?
+            WHERE customer_id = ?
+        ");
+
+        $stmt->execute([
+            $status,
+            (int)$customerId
+        ]);
+
+        return [
+            "success" => true,
+            "message" => $status === 1
+                ? "Mở khóa khách hàng thành công"
+                : "Ban khách hàng thành công"
+        ];
+    }
 }

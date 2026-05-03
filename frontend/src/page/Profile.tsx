@@ -15,7 +15,7 @@ import {
 
 import { validateCustomerInfo } from "@/lib/customerValidators";
 import { validateChangePassword } from "@/lib/authValidators";
-import { initialToast, type ToastType } from "@/lib/toast";
+import { useToast } from "@/hooks/useToast";
 
 type CustomerForm = {
   full_name: string;
@@ -66,15 +66,7 @@ function Profile() {
     confirm: false,
   });
 
-  const [toast, setToast] = useState(initialToast);
-
-  const showToast = (message: string, type: ToastType = "success") => {
-    setToast({ show: true, message, type });
-
-    setTimeout(() => {
-      setToast((prev) => ({ ...prev, show: false }));
-    }, 2500);
-  };
+  const { toast, showToast } = useToast();
 
   useEffect(() => {
     if (!user?.user_id) {

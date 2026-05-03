@@ -189,4 +189,23 @@ class AuthService
 
         return array_merge($user, $admin);
     }
+
+    public function getAdminProfile($adminId)
+    {
+        if (!$adminId) {
+            throw new Exception("Thiếu admin_id");
+        }
+
+        $admin = $this->userModel->findAdminById($adminId);
+
+        if (!$admin) {
+            throw new Exception("Admin không tồn tại");
+        }
+
+        $user = $this->userModel->findById($adminId);
+
+        unset($user["password_hash"]);
+
+        return array_merge($user, $admin);
+    }
 }

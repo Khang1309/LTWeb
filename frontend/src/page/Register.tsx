@@ -1,9 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { customerRegisterApi } from "@/apis/authApi";
+import { useToast } from "@/hooks/useToast";
+import {
+  isRequired,
+  isValidVietnamPhone,
+  isValidPassword,
+  PASSWORD_MIN_LENGTH,
+} from "@/lib/validators";
 
 function Register() {
   const navigate = useNavigate();
+  const { toast, showToast } = useToast();
 
   const [form, setForm] = useState({
     full_name: "",
@@ -15,30 +23,11 @@ function Register() {
     receiver_phone: "",
   });
 
-  const [toast, setToast] = useState({
-    show: false,
-    message: "",
-    type: "success" as "success" | "error",
-  });
-
-  const showToast = (
-    message: string,
-    type: "success" | "error" = "success"
-  ) => {
-    setToast({ show: true, message, type });
-
-    setTimeout(() => {
-      setToast((prev) => ({ ...prev, show: false }));
-    }, 2500);
-  };
-
-  const isValidVietnamPhone = (phone: string) => /^0[0-9]{9}$/.test(phone);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({
-      ...form,
+    setForm((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -55,11 +44,11 @@ function Register() {
     };
 
     if (
-      !payload.full_name ||
-      !payload.email ||
-      !payload.phone ||
-      !payload.password ||
-      !payload.shipping_address
+      !isRequired(payload.full_name) ||
+      !isRequired(payload.email) ||
+      !isRequired(payload.phone) ||
+      !isRequired(payload.password) ||
+      !isRequired(payload.shipping_address)
     ) {
       showToast("Vui lòng nhập đầy đủ thông tin bắt buộc.", "error");
       return;
@@ -70,18 +59,24 @@ function Register() {
       return;
     }
 
-    if (payload.receiver_phone && !isValidVietnamPhone(payload.receiver_phone)) {
+    if (
+      isRequired(payload.receiver_phone) &&
+      !isValidVietnamPhone(payload.receiver_phone)
+    ) {
       showToast("SĐT người nhận phải có 10 số và bắt đầu bằng 0.", "error");
       return;
     }
 
-    if (payload.password.length < 6) {
-      showToast("Mật khẩu phải có ít nhất 6 ký tự.", "error");
+    if (!isValidPassword(payload.password)) {
+      showToast(
+        `Mật khẩu phải có ít nhất ${PASSWORD_MIN_LENGTH} ký tự.`,
+        "error"
+      );
       return;
     }
 
     try {
-    const data = await customerRegisterApi({
+      const data = await customerRegisterApi({
         full_name: payload.full_name,
         email: payload.email,
         phone: payload.phone,
@@ -89,29 +84,25 @@ function Register() {
         shipping_address: payload.shipping_address,
         receiver_name: payload.receiver_name || payload.full_name,
         receiver_phone: payload.receiver_phone || payload.phone,
-    });
+      });
 
-    console.log("register response:", data);
-
-    if (data?.success === false) {
+      if (!data.success) {
         showToast(data.message || "Đăng ký thất bại.", "error");
         return;
-    }
+      }
 
-    showToast("Đăng ký thành công. Vui lòng đăng nhập.", "success");
+      showToast("Đăng ký thành công. Vui lòng đăng nhập.", "success");
 
-    setTimeout(() => {
+      setTimeout(() => {
         navigate("/login");
-    }, 800);
+      }, 800);
     } catch (err: any) {
-    console.log("register error:", err);
-
-    showToast(
+      showToast(
         err.response?.data?.message ||
-        err.message ||
-        "Không kết nối được server.",
+          err.message ||
+          "Không kết nối được server.",
         "error"
-    );
+      );
     }
   };
 
@@ -203,7 +194,9 @@ function Register() {
       </form>
 
       {toast.show && (
-        <div className={`toast ${toast.type} show`}>{toast.message}</div>
+        <div className={`toast ${toast.type} show`}>
+          {toast.message}
+        </div>
       )}
     </div>
   );

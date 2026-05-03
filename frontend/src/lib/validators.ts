@@ -1,15 +1,20 @@
-export const isRequired = (value: string) => {
+export const PASSWORD_MIN_LENGTH = 6;
+
+export const isRequired = (value = "") => {
   return value.trim().length > 0;
 };
 
-export const isValidVietnamPhone = (phone: string) => {
-  return /^0[0-9]{9}$/.test(phone.trim());
+export const isValidVietnamPhone = (phone = "") => {
+  return /^0\d{9}$/.test(phone.trim());
 };
 
-export const isValidPassword = (password: string, minLength = 6) => {
+export const isValidPassword = (
+  password = "",
+  minLength = PASSWORD_MIN_LENGTH
+) => {
   return password.trim().length >= minLength;
 };
 
-export const isSameValue = (a: string, b: string) => {
+export const isSameValue = (a = "", b = "") => {
   return a.trim() === b.trim();
 };
