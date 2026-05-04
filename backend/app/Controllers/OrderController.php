@@ -73,4 +73,121 @@ class OrderController
             $this->json(false, $e->getMessage(), null, 500);
         }
     }
+
+    public function customerConfirmPayment($id)
+    {
+        try {
+            $data = $this->body();
+
+            $customerId = $data["customer_id"] ?? null;
+
+            if (!$customerId) {
+                return $this->json(false, "Thiếu customer_id", null, 400);
+            }
+
+            $result = $this->model->customerConfirmPayment($id, $customerId);
+
+            if (!$result["success"]) {
+                return $this->json(false, $result["message"], null, 422);
+            }
+
+            $this->json(true, $result["message"], $result["data"]);
+        } catch (Throwable $e) {
+            $this->json(false, $e->getMessage(), null, 500);
+        }
+    }
+
+    public function customerCancel($id)
+    {
+        try {
+            $data = $this->body();
+
+            $customerId = $data["customer_id"] ?? null;
+            $note = $data["note"] ?? null;
+
+            if (!$customerId) {
+                return $this->json(false, "Thiếu customer_id", null, 400);
+            }
+
+            $result = $this->model->customerCancelPendingOrder($id, $customerId, $note);
+
+            if (!$result["success"]) {
+                return $this->json(false, $result["message"], null, 422);
+            }
+
+            $this->json(true, $result["message"], $result["data"]);
+        } catch (Throwable $e) {
+            $this->json(false, $e->getMessage(), null, 500);
+        }
+    }
+
+    public function customerConfirmDelivered($id)
+    {
+        try {
+            $data = $this->body();
+
+            $customerId = $data["customer_id"] ?? null;
+
+            if (!$customerId) {
+                return $this->json(false, "Thiếu customer_id", null, 400);
+            }
+
+            $result = $this->model->customerConfirmDelivered($id, $customerId);
+
+            if (!$result["success"]) {
+                return $this->json(false, $result["message"], null, 422);
+            }
+
+            $this->json(true, $result["message"], $result["data"]);
+        } catch (Throwable $e) {
+            $this->json(false, $e->getMessage(), null, 500);
+        }
+    }
+    public function createFromCart()
+    {
+        try {
+            $data = $this->body();
+
+            $customerId = $data["customer_id"] ?? null;
+            $paymentMethod = $data["payment_method"] ?? "cod";
+            $note = $data["note"] ?? null;
+
+            if (!$customerId) {
+                return $this->json(false, "Thiếu customer_id", null, 400);
+            }
+
+            $result = $this->model->createFromCart(
+                (int)$customerId,
+                $paymentMethod,
+                $note
+            );
+
+            if (!$result["success"]) {
+                return $this->json(false, $result["message"], null, 422);
+            }
+
+            $this->json(true, $result["message"], $result["data"]);
+        } catch (Throwable $e) {
+            $this->json(false, $e->getMessage(), null, 500);
+        }
+    }
+
+    public function getCustomerOrders($customerId)
+    {
+        try {
+            if (!$customerId) {
+                return $this->json(false, "Thiếu customer_id", null, 400);
+            }
+
+            $orders = $this->model->getByCustomerId((int)$customerId);
+
+            return $this->json(
+                true,
+                "Lấy danh sách đơn hàng thành công",
+                $orders
+            );
+        } catch (Throwable $e) {
+            return $this->json(false, $e->getMessage(), null, 500);
+        }
+    }
 }

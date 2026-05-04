@@ -20,6 +20,12 @@ import Register from "@/page/Register";
 // thông tin khách hàng
 import Profile from "@/page/Profile";
 
+//cart
+import Cart from "@/page/Cart";
+
+//order
+import Orders from "@/page/Orders";
+
 const routes = createRoutesFromElements(
 
   <>
@@ -42,6 +48,12 @@ const routes = createRoutesFromElements(
 
       {/* thông tin khách hàng */}
       <Route path="/profile" element={<Profile />} />
+      
+      {/* cart */}
+      <Route path="/cart" element={<Cart />} />
+
+      {/* order */}
+      <Route path="/orders" element={<Orders />} />
 
     </Route>
 

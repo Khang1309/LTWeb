@@ -44,6 +44,7 @@ require_once __DIR__ . "/../app/controllers/CustomerController.php";
 require_once __DIR__ . "/../app/controllers/AdminController.php";
 require_once __DIR__ . "/../app/controllers/ProductController.php";
 require_once __DIR__ . "/../app/controllers/OrderController.php";
+require_once __DIR__ . "/../app/controllers/CartController.php";
 
 $uri = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
 $method = $_SERVER["REQUEST_METHOD"];
@@ -54,6 +55,7 @@ $customerController = new CustomerController($conn);
 $adminController = new AdminController($conn);
 $productController = new ProductController($conn);
 $orderController = new OrderController($conn);
+$cartController = new CartController($conn);
 
 switch ($uri) {
     // CUSTOMER LOGIN
@@ -248,6 +250,99 @@ switch ($uri) {
         if ($method === "PUT") {
             $id = $_GET["id"] ?? 0;
             $orderController->moveToShipping($id);
+        } else {
+            http_response_code(405);
+            echo json_encode(["success" => false, "message" => "Method không hợp lệ"]);
+        }
+        break;
+    case "/api/orders/customer-confirm-payment":
+    if ($method === "PUT") {
+        $id = $_GET["id"] ?? 0;
+        $orderController->customerConfirmPayment($id);
+    } else {
+        http_response_code(405);
+        echo json_encode(["success" => false, "message" => "Method không hợp lệ"]);
+    }
+    break;
+
+    case "/api/orders/customer-cancel":
+        if ($method === "PUT") {
+            $id = $_GET["id"] ?? 0;
+            $orderController->customerCancel($id);
+        } else {
+            http_response_code(405);
+            echo json_encode(["success" => false, "message" => "Method không hợp lệ"]);
+        }
+        break;
+
+    case "/api/orders/customer-confirm-delivered":
+        if ($method === "PUT") {
+            $id = $_GET["id"] ?? 0;
+            $orderController->customerConfirmDelivered($id);
+        } else {
+            http_response_code(405);
+            echo json_encode(["success" => false, "message" => "Method không hợp lệ"]);
+        }
+        break;
+
+    case "/api/orders/create-from-cart":
+        if ($method === "POST") {
+            $orderController->createFromCart();
+        } else {
+            http_response_code(405);
+            echo json_encode(["success" => false, "message" => "Method không hợp lệ"]);
+        }
+        break;
+
+    case "/api/orders/customer":
+        if ($method === "GET") {
+            $customerId = $_GET["customer_id"] ?? null;
+            $orderController->getCustomerOrders($customerId);
+        } else {
+            http_response_code(405);
+            echo json_encode(["success" => false, "message" => "Method không hợp lệ"]);
+        }
+        break;
+    // CART (Giỏ hàng)
+    case "/api/cart":
+        if ($method === "GET") {
+            $cartController->list();
+        } else {
+            http_response_code(405);
+            echo json_encode(["success" => false, "message" => "Method không hợp lệ"]);
+        }
+        break;
+
+    case "/api/cart/add":
+        if ($method === "POST") {
+            $cartController->add();
+        } else {
+            http_response_code(405);
+            echo json_encode(["success" => false, "message" => "Method không hợp lệ"]);
+        }
+        break;
+
+    case "/api/cart/update":
+        if ($method === "PUT") {
+            $cartController->update();
+        } else {
+            http_response_code(405);
+            echo json_encode(["success" => false, "message" => "Method không hợp lệ"]);
+        }
+        break;
+
+    case "/api/cart/remove":
+        if ($method === "DELETE") {
+            $cartController->remove();
+        } else {
+            http_response_code(405);
+            echo json_encode(["success" => false, "message" => "Method không hợp lệ"]);
+        }
+        break;
+
+    case "/api/cart/clear":
+        if ($method === "DELETE") {
+            $cartController->clear();
         } else {
             http_response_code(405);
             echo json_encode(["success" => false, "message" => "Method không hợp lệ"]);

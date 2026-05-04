@@ -91,7 +91,11 @@ function Header({ leftTrigger }: { leftTrigger: any }) {
       </div>
 
       <div className="flex-1 flex text-xs md:text-sm lg:text-base gap-8 justify-end px-4">
-        <div className="flex-1 flex justify-center items-center flex-col cursor-pointer">
+        {/* cart */}
+        <div
+          onClick={() => navigate("/cart")}
+          className="flex-1 flex justify-center items-center flex-col cursor-pointer hover:text-blue-600 transition"
+        >
           <ShoppingBasketIcon />
           <div>Cart</div>
         </div>
@@ -137,6 +141,16 @@ function Header({ leftTrigger }: { leftTrigger: any }) {
                   className="w-full justify-start rounded-none h-12 border-b font-normal"
                 >
                   Thông tin tài khoản
+                </Button>
+                <Button
+                    variant="ghost"
+                    onClick={() => {
+                      setOpenUserPopup(false);
+                      navigate("/orders");
+                    }}
+                    className="w-full justify-start rounded-none h-12 border-b font-normal"
+                  >
+                    Đơn hàng của tôi
                 </Button>
 
                 <Button

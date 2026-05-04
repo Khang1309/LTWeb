@@ -304,49 +304,49 @@ CREATE TABLE faqs (
 -- USERS
 -- =========================
 INSERT INTO users (full_name, email, password_hash, phone) VALUES
--- pass123
+-- password: admin123
 ('Nguyen Van An', 'admin1@store.com',
-'$2y$12$JYQEiD0ArZbh1jFkI5QNO.6f.zilv7NzlVqpovA1382cT2nOp/5XO',
+'$2y$12$8T11Vyi31Jgxhw3fGWDzIuo3f4thxSpf0QHGyj2nNcdueJ6eBEVuy',
 '0901000001'),
 
--- admin123
+-- password: admin234
 ('Tran Thi Kieu Nga', 'admin2@store.com',
-'$2y$12$6E0C4E7ZdJ9x7yVPlMQyOe0sYEYt4KnGrLs3KtjgdGEWt3zCIlgPK',
+'$2y$12$bc4YwfMZrFGOkG1WRWkXDOTItP/t2Ls/mMjpWMm.9GhjpvTQX2iCO',
 '0901000002'),
 
--- 12345
+-- password: admin345
 ('Le Hoang Minh', 'admin3@store.com',
-'$2y$12$2WV72DAp9biCxdgJhbQsxuE.WbtzN3TRR/9JyGW09.XuvhWISEuWO',
+'$2y$12$5pwuVk4vGX2IWkiE/8PLa.UisW.L7B0tz1pLq6S5rdqYCW3H2KcyW',
 '0901000003'),
 
--- abc123
+-- password: customer123
 ('Le Minh Quan', 'customer1@gmail.com',
-'$2y$12$8dBeO6Eo2rcJb7C.ZT0S5OnKAOXFRixaTmvt8eDtOM8Q/SW71WnxK',
+'$2y$12$yDdb7q4WXP8eZzJonk0yue9guPVu6DwdxYGQAmaTX.Fkx/ySacFii',
 '0912000001'),
 
--- pass123
+-- password: customer234
 ('Pham Ngoc Lan', 'customer2@gmail.com',
-'$2y$12$JYQEiD0ArZbh1jFkI5QNO.6f.zilv7NzlVqpovA1382cT2nOp/5XO',
+'$2y$12$g6Sj70SdWZdTPxu3VEEDAOe1hMUKcKce7OmQhlZl.ALYo7ERdgfG2',
 '0912000002'),
 
--- 123456
+-- password: customer345
 ('Hoang Gia Bao', 'customer3@gmail.com',
-'$2y$12$3xzHL/eQtdgzq6ciYm34NunhQcqDVJvglPSN/zH9wHD5MNdi8hlaG',
+'$2y$12$CFZhPCSdlJ.ppWgP/cE/z.6pSfBj3anrbpgxf7QpnJr8Cf4Gl7KBy',
 '0912000003'),
 
--- hello123
+-- password: customer456
 ('Nguyen Thu Ha', 'customer4@gmail.com',
-'$2y$12$7.8Exa991guwoV6Y2k1baeUr6XyPYNBVF7rAsApy5578z6.Y6xAju',
+'$2y$12$Zbc28O9R81qmxep64NP37.oHaZjW4c88k5yMNmmxSHDxKZsmBBSCS',
 '0912000004'),
 
--- abc123
+-- password: customer567
 ('Tran Quoc Viet', 'customer5@gmail.com',
-'$2y$12$8dBeO6Eo2rcJb7C.ZT0S5OnKAOXFRixaTmvt8eDtOM8Q/SW71WnxK',
+'$2y$12$77bQ7/zhfhwA.QQWejpIi.5cI65vrQOLwilbA9WEx83QqXOEbwmlu',
 '0912000005'),
 
--- 12345
+-- password: customer678
 ('Do Minh Anh', 'customer6@gmail.com',
-'$2y$12$2WV72DAp9biCxdgJhbQsxuE.WbtzN3TRR/9JyGW09.XuvhWISEuWO',
+'$2y$12$Z42d/kKF7r0wJM4pzwkxvuDE9o7xDv5sjrhuX6v3JBQ5RBTvSFBr2',
 '0912000006');
 
 -- =========================
@@ -376,13 +376,13 @@ INSERT INTO categories (category_name, parent_category_id) VALUES
 ('Programming', 1),
 ('Business', 1),
 ('Self-help', 1),
-('Technology', NULL),
-('Accessories', NULL),
-('Office Supplies', NULL),
+('Novel', 1),
+('Manga', 1),
+('Light Novel', 1),
 ('Best Seller', NULL);
 
 -- =========================
--- PRODUCTS (10 products)
+-- PRODUCTS
 -- =========================
 INSERT INTO products (product_name, brand, description, created_by_admin_id, updated_by_admin_id) VALUES
 ('Clean Code', 'Prentice Hall', 'A handbook of agile software craftsmanship.', 1, 1),
@@ -390,11 +390,11 @@ INSERT INTO products (product_name, brand, description, created_by_admin_id, upd
 ('Atomic Habits', 'Avery', 'An easy and proven way to build good habits.', 1, 2),
 ('Deep Work', 'Grand Central Publishing', 'Rules for focused success in a distracted world.', 2, 2),
 ('Think and Grow Rich', 'The Ralston Society', 'A classic personal success book.', 2, 3),
-('Wireless Mouse M185', 'Logitech', 'Compact wireless mouse for office and study.', 1, 2),
-('Mechanical Keyboard K8', 'Keychron', 'Hot-swappable wireless mechanical keyboard.', 1, 3),
-('USB-C Hub 7 in 1', 'Anker', 'Multiport adapter for laptop and tablet.', 2, 2),
-('A5 Notebook Premium', 'Moleskine', 'Hardcover notebook for writing and planning.', 3, 3),
-('Desk Lamp LED Pro', 'Xiaomi', 'Adjustable LED desk lamp for study and work.', 1, 3);
+('One Piece Vol.1', 'Shueisha', 'Adventure manga by Eiichiro Oda.', 1, 2),
+('Naruto Vol.1', 'Shueisha', 'Ninja action manga by Masashi Kishimoto.', 1, 3),
+('Doraemon Vol.1', 'Shogakukan', 'Classic manga for all ages.', 2, 2),
+('Your Name', 'Kadokawa', 'Japanese light novel based on the animated film.', 3, 3),
+('Harry Potter and the Sorcerer''s Stone', 'Bloomsbury', 'Fantasy novel about a young wizard.', 1, 3);
 
 -- =========================
 -- PRODUCT_CATEGORIES
@@ -405,67 +405,67 @@ INSERT INTO product_categories (product_id, category_id) VALUES
 (3, 1), (3, 4), (3, 8),
 (4, 1), (4, 4),
 (5, 1), (5, 3),
-(6, 6), (6, 5),
-(7, 6), (7, 5), (7, 8),
-(8, 5), (8, 6),
-(9, 7),
-(10, 5), (10, 7);
+(6, 1), (6, 6), (6, 8),
+(7, 1), (7, 6),
+(8, 1), (8, 6),
+(9, 1), (9, 7), (9, 8),
+(10, 1), (10, 5), (10, 8);
 
 -- =========================
--- PRODUCT_VERSIONS (30 versions total)
+-- PRODUCT_VERSIONS
 -- =========================
 INSERT INTO product_versions
 (product_id, sku, version_name, format_type, language, cover_type, edition, price, stock_quantity, image_url, version_status)
 VALUES
 -- Product 1: Clean Code
-(1, 'P001-V01', 'Paperback - Vietnamese', 'paperback', 'Vietnamese', 'Soft Cover', '1st Edition', 120000, 50, 'clean-code-paperback-vn.jpg', 'available'),
-(1, 'P001-V02', 'Hardcover - English', 'hardcover', 'English', 'Hard Cover', '1st Edition', 250000, 20, 'clean-code-hardcover-en.jpg', 'available'),
-(1, 'P001-V03', 'eBook - English', 'ebook', 'English', NULL, 'Digital Edition', 90000, 999, 'clean-code-ebook-en.jpg', 'available'),
+(1, 'P001-V01', 'Paperback - Vietnamese', 'paperback', 'Vietnamese', 'Soft Cover', '1st Edition', 120000, 50, 'uploads/products/product_1777914553_9111.jpg', 'available'),
+(1, 'P001-V02', 'Hardcover - English', 'hardcover', 'English', 'Hard Cover', '1st Edition', 250000, 20, NULL, 'available'),
+(1, 'P001-V03', 'eBook - English', 'ebook', 'English', NULL, 'Digital Edition', 90000, 999, NULL, 'available'),
 
 -- Product 2: The Pragmatic Programmer
-(2, 'P002-V01', 'Paperback - English', 'paperback', 'English', 'Soft Cover', '20th Anniversary', 180000, 35, 'pragmatic-paperback-en.jpg', 'available'),
-(2, 'P002-V02', 'Hardcover - English', 'hardcover', 'English', 'Hard Cover', '20th Anniversary', 290000, 12, 'pragmatic-hardcover-en.jpg', 'available'),
-(2, 'P002-V03', 'eBook - English', 'ebook', 'English', NULL, 'Digital Edition', 110000, 999, 'pragmatic-ebook-en.jpg', 'available'),
+(2, 'P002-V01', 'Paperback - English', 'paperback', 'English', 'Soft Cover', '20th Anniversary', 180000, 35, NULL, 'available'),
+(2, 'P002-V02', 'Hardcover - English', 'hardcover', 'English', 'Hard Cover', '20th Anniversary', 290000, 12, NULL, 'available'),
+(2, 'P002-V03', 'eBook - English', 'ebook', 'English', NULL, 'Digital Edition', 110000, 999, NULL, 'available'),
 
 -- Product 3: Atomic Habits
-(3, 'P003-V01', 'Paperback - Vietnamese', 'paperback', 'Vietnamese', 'Soft Cover', 'Vietnamese Edition', 99000, 100, 'atomic-habits-paperback-vn.jpg', 'available'),
-(3, 'P003-V02', 'Hardcover - English', 'hardcover', 'English', 'Hard Cover', 'Deluxe Edition', 280000, 10, 'atomic-habits-hardcover-en.jpg', 'available'),
-(3, 'P003-V03', 'eBook - English', 'ebook', 'English', NULL, 'Digital Edition', 85000, 999, 'atomic-habits-ebook-en.jpg', 'available'),
+(3, 'P003-V01', 'Paperback - Vietnamese', 'paperback', 'Vietnamese', 'Soft Cover', 'Vietnamese Edition', 99000, 100, NULL, 'available'),
+(3, 'P003-V02', 'Hardcover - English', 'hardcover', 'English', 'Hard Cover', 'Deluxe Edition', 280000, 10, NULL, 'available'),
+(3, 'P003-V03', 'eBook - English', 'ebook', 'English', NULL, 'Digital Edition', 85000, 999, NULL, 'available'),
 
 -- Product 4: Deep Work
-(4, 'P004-V01', 'Paperback - English', 'paperback', 'English', 'Soft Cover', '1st Edition', 160000, 28, 'deep-work-paperback-en.jpg', 'available'),
-(4, 'P004-V02', 'Hardcover - English', 'hardcover', 'English', 'Hard Cover', '1st Edition', 260000, 15, 'deep-work-hardcover-en.jpg', 'available'),
-(4, 'P004-V03', 'eBook - English', 'ebook', 'English', NULL, 'Digital Edition', 95000, 999, 'deep-work-ebook-en.jpg', 'available'),
+(4, 'P004-V01', 'Paperback - English', 'paperback', 'English', 'Soft Cover', '1st Edition', 160000, 28, NULL, 'available'),
+(4, 'P004-V02', 'Hardcover - English', 'hardcover', 'English', 'Hard Cover', '1st Edition', 260000, 15, NULL, 'available'),
+(4, 'P004-V03', 'eBook - English', 'ebook', 'English', NULL, 'Digital Edition', 95000, 999, NULL, 'available'),
 
 -- Product 5: Think and Grow Rich
-(5, 'P005-V01', 'Paperback - Vietnamese', 'paperback', 'Vietnamese', 'Soft Cover', 'Reprint 2024', 88000, 60, 'think-grow-rich-paperback-vn.jpg', 'available'),
-(5, 'P005-V02', 'Hardcover - English', 'hardcover', 'English', 'Hard Cover', 'Classic Edition', 210000, 18, 'think-grow-rich-hardcover-en.jpg', 'available'),
-(5, 'P005-V03', 'eBook - English', 'ebook', 'English', NULL, 'Digital Edition', 70000, 999, 'think-grow-rich-ebook-en.jpg', 'available'),
+(5, 'P005-V01', 'Paperback - Vietnamese', 'paperback', 'Vietnamese', 'Soft Cover', 'Reprint 2024', 88000, 60, NULL, 'available'),
+(5, 'P005-V02', 'Hardcover - English', 'hardcover', 'English', 'Hard Cover', 'Classic Edition', 210000, 18, NULL, 'available'),
+(5, 'P005-V03', 'eBook - English', 'ebook', 'English', NULL, 'Digital Edition', 70000, 999, NULL, 'available'),
 
--- Product 6: Wireless Mouse M185
-(6, 'P006-V01', 'Black Version', 'special_edition', 'Universal', NULL, 'Standard', 250000, 40, 'mouse-black.jpg', 'available'),
-(6, 'P006-V02', 'Blue Version', 'special_edition', 'Universal', NULL, 'Standard', 255000, 25, 'mouse-blue.jpg', 'available'),
-(6, 'P006-V03', 'Grey Version', 'special_edition', 'Universal', NULL, 'Standard', 260000, 0, 'mouse-grey.jpg', 'out_of_stock'),
+-- Product 6: One Piece Vol.1
+(6, 'P006-V01', 'Paperback - Vietnamese', 'paperback', 'Vietnamese', 'Soft Cover', 'Vietnamese Edition', 35000, 120, NULL, 'available'),
+(6, 'P006-V02', 'Paperback - English', 'paperback', 'English', 'Soft Cover', 'English Edition', 95000, 40, NULL, 'available'),
+(6, 'P006-V03', 'Collector Edition - Japanese', 'special_edition', 'Japanese', 'Soft Cover', 'Collector Edition', 180000, 15, NULL, 'available'),
 
--- Product 7: Mechanical Keyboard K8
-(7, 'P007-V01', 'White Backlight - Red Switch', 'special_edition', 'Universal', NULL, 'K8 Standard', 1590000, 14, 'k8-red-switch.jpg', 'available'),
-(7, 'P007-V02', 'RGB - Brown Switch', 'special_edition', 'Universal', NULL, 'K8 RGB', 1890000, 9, 'k8-brown-switch.jpg', 'available'),
-(7, 'P007-V03', 'RGB - Blue Switch', 'special_edition', 'Universal', NULL, 'K8 RGB', 1890000, 0, 'k8-blue-switch.jpg', 'out_of_stock'),
+-- Product 7: Naruto Vol.1
+(7, 'P007-V01', 'Paperback - Vietnamese', 'paperback', 'Vietnamese', 'Soft Cover', 'Vietnamese Edition', 35000, 100, NULL, 'available'),
+(7, 'P007-V02', 'Paperback - English', 'paperback', 'English', 'Soft Cover', 'English Edition', 90000, 35, NULL, 'available'),
+(7, 'P007-V03', 'Collector Edition - Japanese', 'special_edition', 'Japanese', 'Soft Cover', 'Collector Edition', 170000, 0, NULL, 'out_of_stock'),
 
--- Product 8: USB-C Hub 7 in 1
-(8, 'P008-V01', 'Space Grey', 'special_edition', 'Universal', NULL, '2025 Edition', 790000, 32, 'hub-space-grey.jpg', 'available'),
-(8, 'P008-V02', 'Silver', 'special_edition', 'Universal', NULL, '2025 Edition', 790000, 20, 'hub-silver.jpg', 'available'),
-(8, 'P008-V03', 'Black', 'special_edition', 'Universal', NULL, '2025 Edition', 810000, 11, 'hub-black.jpg', 'available'),
+-- Product 8: Doraemon Vol.1
+(8, 'P008-V01', 'Paperback - Vietnamese', 'paperback', 'Vietnamese', 'Soft Cover', 'Vietnamese Edition', 30000, 150, NULL, 'available'),
+(8, 'P008-V02', 'Paperback - English', 'paperback', 'English', 'Soft Cover', 'English Edition', 85000, 30, NULL, 'available'),
+(8, 'P008-V03', 'Special Edition - Vietnamese', 'special_edition', 'Vietnamese', 'Soft Cover', 'Special Edition', 120000, 20, NULL, 'available'),
 
--- Product 9: A5 Notebook Premium
-(9, 'P009-V01', 'Black Hardcover', 'special_edition', 'Universal', 'Hard Cover', 'Ruled', 180000, 70, 'notebook-black.jpg', 'available'),
-(9, 'P009-V02', 'Brown Hardcover', 'special_edition', 'Universal', 'Hard Cover', 'Dotted', 185000, 55, 'notebook-brown.jpg', 'available'),
-(9, 'P009-V03', 'Blue Hardcover', 'special_edition', 'Universal', 'Hard Cover', 'Plain', 175000, 45, 'notebook-blue.jpg', 'available'),
+-- Product 9: Your Name
+(9, 'P009-V01', 'Paperback - Vietnamese', 'paperback', 'Vietnamese', 'Soft Cover', 'Vietnamese Edition', 105000, 70, NULL, 'available'),
+(9, 'P009-V02', 'Paperback - English', 'paperback', 'English', 'Soft Cover', 'English Edition', 160000, 25, NULL, 'available'),
+(9, 'P009-V03', 'Hardcover - Japanese', 'hardcover', 'Japanese', 'Hard Cover', 'Japanese Edition', 260000, 10, NULL, 'available'),
 
--- Product 10: Desk Lamp LED Pro
-(10, 'P010-V01', 'White', 'special_edition', 'Universal', NULL, 'Standard', 690000, 26, 'lamp-white.jpg', 'available'),
-(10, 'P010-V02', 'Black', 'special_edition', 'Universal', NULL, 'Standard', 690000, 18, 'lamp-black.jpg', 'available'),
-(10, 'P010-V03', 'Pro Max', 'special_edition', 'Universal', NULL, 'Premium', 990000, 8, 'lamp-promax.jpg', 'available');
+-- Product 10: Harry Potter and the Sorcerer''s Stone
+(10, 'P010-V01', 'Paperback - Vietnamese', 'paperback', 'Vietnamese', 'Soft Cover', 'Vietnamese Edition', 150000, 80, NULL, 'available'),
+(10, 'P010-V02', 'Paperback - English', 'paperback', 'English', 'Soft Cover', 'English Edition', 220000, 45, NULL, 'available'),
+(10, 'P010-V03', 'Hardcover - English', 'hardcover', 'English', 'Hard Cover', 'Illustrated Edition', 450000, 12, NULL, 'available');
 
 -- =========================
 -- CARTS
@@ -480,12 +480,12 @@ INSERT INTO cart_items (cart_id, version_id, quantity) VALUES
 (1, 1, 2),
 (1, 7, 1),
 (2, 5, 1),
-(2, 17, 1),
-(3, 22, 1),
-(3, 28, 2),
+(2, 16, 2),
+(3, 22, 3),
+(3, 28, 1),
 (4, 10, 1),
 (5, 19, 1),
-(5, 25, 3),
+(5, 25, 2),
 (6, 30, 1);
 
 -- =========================
@@ -495,10 +495,10 @@ INSERT INTO orders
 (customer_id, order_status, shipping_address, receiver_name, receiver_phone, total_amount, processed_by_admin_id, note)
 VALUES
 (4, 'confirmed', '123 Le Loi, District 1, Ho Chi Minh City', 'Le Minh Customer', '0912000001', 339000, 2, 'Customer requested fast delivery'),
-(5, 'shipping', '45 Nguyen Hue, District 1, Ho Chi Minh City', 'Pham Ngoc Lan', '0912000002', 2145000, 2, 'Handle with care'),
-(6, 'pending', '88 Hai Ba Trung, District 3, Ho Chi Minh City', 'Hoang Gia Bao', '0912000003', 790000, NULL, 'Waiting for payment confirmation'),
-(8, 'delivered', '77 Cach Mang Thang 8, District 10, Ho Chi Minh City', 'Tran Quoc Viet', '0912000005', 360000, 3, 'Delivered successfully'),
-(9, 'cancelled', '21 Phan Xich Long, Phu Nhuan, Ho Chi Minh City', 'Do Minh Anh', '0912000006', 690000, 1, 'Payment failed');
+(5, 'shipping', '45 Nguyen Hue, District 1, Ho Chi Minh City', 'Pham Ngoc Lan', '0912000002', 360000, 2, 'Books should be packed carefully'),
+(6, 'pending', '88 Hai Ba Trung, District 3, Ho Chi Minh City', 'Hoang Gia Bao', '0912000003', 255000, NULL, 'Waiting for payment confirmation'),
+(8, 'delivered', '77 Cach Mang Thang 8, District 10, Ho Chi Minh City', 'Tran Quoc Viet', '0912000005', 315000, 3, 'Delivered successfully'),
+(9, 'cancelled', '21 Phan Xich Long, Phu Nhuan, Ho Chi Minh City', 'Do Minh Anh', '0912000006', 450000, 1, 'Payment failed');
 
 -- =========================
 -- ORDER_ITEMS
@@ -510,28 +510,30 @@ VALUES
 (1, 7, 'Atomic Habits', 'Paperback - Vietnamese', 99000, 1, 99000),
 
 (2, 5, 'The Pragmatic Programmer', 'Hardcover - English', 290000, 1, 290000),
-(2, 17, 'Wireless Mouse M185', 'Blue Version', 255000, 1, 255000),
-(2, 20, 'Mechanical Keyboard K8', 'RGB - Brown Switch', 1890000, 1, 1890000),
+(2, 13, 'Think and Grow Rich', 'Paperback - Vietnamese', 88000, 1, 88000),
+(2, 16, 'One Piece Vol.1', 'Paperback - Vietnamese', 35000, 2, 70000),
 
-(3, 22, 'USB-C Hub 7 in 1', 'Space Grey', 790000, 1, 790000),
+(3, 22, 'Doraemon Vol.1', 'Paperback - Vietnamese', 30000, 3, 90000),
+(3, 28, 'Harry Potter and the Sorcerer''s Stone', 'Paperback - Vietnamese', 150000, 1, 150000),
+(3, 24, 'Doraemon Vol.1', 'Special Edition - Vietnamese', 120000, 1, 120000),
 
-(4, 13, 'Think and Grow Rich', 'Paperback - Vietnamese', 88000, 2, 176000),
-(4, 25, 'A5 Notebook Premium', 'Brown Hardcover', 184000, 1, 184000),
+(4, 19, 'Naruto Vol.1', 'Paperback - Vietnamese', 35000, 1, 35000),
+(4, 25, 'Your Name', 'Paperback - Vietnamese', 105000, 2, 210000),
+(4, 10, 'Deep Work', 'Paperback - English', 160000, 1, 160000),
 
-(5, 28, 'Desk Lamp LED Pro', 'White', 690000, 1, 690000);
+(5, 30, 'Harry Potter and the Sorcerer''s Stone', 'Hardcover - English', 450000, 1, 450000);
 
 -- =========================
 -- PAYMENTS
--- 1 order - 1 payment
 -- =========================
 INSERT INTO payments
 (order_id, payment_method, payment_status, amount, transaction_code, paid_at)
 VALUES
 (1, 'cod', 'pending', 339000, NULL, NULL),
-(2, 'vnpay', 'paid', 2145000, 'VNPAY_20260422_0001', '2026-04-22 09:30:00'),
-(3, 'bank_transfer', 'pending', 790000, NULL, NULL),
-(4, 'momo', 'paid', 360000, 'MOMO_20260422_0002', '2026-04-22 10:20:00'),
-(5, 'credit_card', 'failed', 690000, 'CARD_20260422_0003', NULL);
+(2, 'vnpay', 'paid', 448000, 'VNPAY_20260422_0001', '2026-04-22 09:30:00'),
+(3, 'bank_transfer', 'pending', 360000, NULL, NULL),
+(4, 'momo', 'paid', 405000, 'MOMO_20260422_0002', '2026-04-22 10:20:00'),
+(5, 'credit_card', 'failed', 450000, 'CARD_20260422_0003', NULL);
 
 -- =========================
 -- ORDER_STATUS_HISTORY
@@ -563,9 +565,9 @@ INSERT INTO contacts
 (full_name, email, subject, message, contact_status, handled_by_admin_id)
 VALUES
 ('Nguyen Thi Hong', 'hong@gmail.com', 'Hỏi về thời gian giao hàng', 'Cho mình hỏi đơn hàng ở Hà Nội thường giao trong bao lâu?', 'replied', 2),
-('Tran Van Duc', 'duc@gmail.com', 'Hỗ trợ đổi trả', 'Nếu sản phẩm bị lỗi thì đổi trả như thế nào?', 'in_progress', 2),
+('Tran Van Duc', 'duc@gmail.com', 'Hỗ trợ đổi trả', 'Nếu sách bị lỗi in hoặc rách trang thì đổi trả như thế nào?', 'in_progress', 2),
 ('Le Phuong Anh', 'phuonganh@gmail.com', 'Hỏi về sản phẩm', 'Bên mình còn bản hardcover của Atomic Habits không?', 'new', NULL),
-('Vo Minh Tuan', 'tuan@gmail.com', 'Liên hệ hợp tác', 'Mình muốn liên hệ hợp tác phân phối sản phẩm.', 'closed', 1),
+('Vo Minh Tuan', 'tuan@gmail.com', 'Liên hệ hợp tác', 'Mình muốn liên hệ hợp tác phân phối sách.', 'closed', 1),
 ('Pham Gia Han', 'giah@gmail.com', 'Cập nhật thông tin', 'Mình cần đổi địa chỉ giao hàng cho đơn đã đặt.', 'new', NULL);
 
 -- =========================
@@ -576,9 +578,9 @@ INSERT INTO faqs
 VALUES
 ('Thời gian giao hàng mất bao lâu?', 'Thông thường đơn hàng nội thành mất 1-3 ngày làm việc, ngoại thành mất 3-5 ngày.', 'Shipping', 1, 1),
 ('Tôi có thể thanh toán bằng cách nào?', 'Bạn có thể thanh toán bằng COD, chuyển khoản, MoMo, VNPay hoặc thẻ tín dụng.', 'Payment', 1, 1),
-('Làm sao để đổi trả sản phẩm?', 'Bạn có thể liên hệ bộ phận hỗ trợ trong vòng 7 ngày kể từ khi nhận hàng để được hướng dẫn đổi trả.', 'Return', 1, 2),
-('Tôi có cần tài khoản để đặt hàng không?', 'Có, bạn nên đăng nhập tài khoản để theo dõi đơn hàng và lịch sử mua sắm.', 'Account', 1, 2),
-('Sản phẩm hết hàng có nhập lại không?', 'Tùy từng sản phẩm, hệ thống sẽ cập nhật khi có hàng mới.', 'Product', 1, 3);
+('Làm sao để đổi trả sách?', 'Bạn có thể liên hệ bộ phận hỗ trợ trong vòng 7 ngày kể từ khi nhận hàng nếu sách bị lỗi in, rách trang hoặc giao sai sản phẩm.', 'Return', 1, 2),
+('Tôi có cần tài khoản để đặt hàng không?', 'Có, bạn nên đăng nhập tài khoản để theo dõi đơn hàng và lịch sử mua sách.', 'Account', 1, 2),
+('Sách hết hàng có nhập lại không?', 'Tùy từng đầu sách, hệ thống sẽ cập nhật khi có hàng mới.', 'Product', 1, 3);
 
 -- =========================================================
 -- SOME USEFUL TEST QUERIES
