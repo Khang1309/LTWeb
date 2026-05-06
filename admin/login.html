@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Admin Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" type="image/png" href="assets/images/icon/logo.png">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/fontawesome.min.css">
+    <link rel="stylesheet" href="assets/css/themify-icons.css">
+    <link rel="stylesheet" href="assets/css/metismenujs.min.css">
+    <link rel="stylesheet" href="assets/css/swiper-bundle.min.css">
+    <link rel="stylesheet" href="assets/css/typography.css">
+    <link rel="stylesheet" href="assets/css/default-css.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+
+<body>
+    <div id="preloader">
+        <div class="loader"></div>
+    </div>
+
+    <div class="login-area">
+        <div class="container">
+            <div class="login-box ptb--100">
+                <form id="adminLoginForm">
+                    <div class="login-form-head">
+                        <h4>Admin Sign In</h4>
+                        <p>Đăng nhập để quản lý hệ thống</p>
+                    </div>
+
+                    <div class="login-form-body">
+                        <div class="form-gp">
+                            <label for="identifier">Email hoặc số điện thoại</label>
+                            <input type="text" id="identifier" autocomplete="username">
+                            <i class="ti-email"></i>
+                            <div id="identifierError" class="text-danger"></div>
+                        </div>
+
+                        <div class="form-gp">
+                            <label for="password">Mật khẩu</label>
+                            <input type="password" id="password" autocomplete="current-password">
+                            <i class="ti-lock"></i>
+                            <div id="passwordError" class="text-danger"></div>
+                        </div>
+
+                        <p id="loginMessage" class="text-danger text-center mt-3"></p>
+
+                        <div class="submit-btn-area">
+                            <button id="form_submit" type="submit">
+                                Đăng nhập <i class="ti-arrow-right"></i>
+                            </button>
+                        </div>
+
+                        <div class="form-footer text-center mt-5">
+                            <p class="text-muted">Trang quản trị dành cho Admin</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/swiper-bundle.min.js"></script>
+    <script src="assets/js/metismenujs.min.js"></script>
+    <script src="assets/js/scripts.js"></script>
+
+    <script>
+        const API_BASE = "http://localhost:8000";
+
+        const form = document.getElementById("adminLoginForm");
+        const identifierInput = document.getElementById("identifier");
+        const passwordInput = document.getElementById("password");
+        const identifierError = document.getElementById("identifierError");
+        const passwordError = document.getElementById("passwordError");
+        const loginMessage = document.getElementById("loginMessage");
+        const submitBtn = document.getElementById("form_submit");
+
+        form.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const identifier = identifierInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            identifierError.textContent = "";
+            passwordError.textContent = "";
+            loginMessage.textContent = "";
+
+            if (!identifier) {
+                identifierError.textContent = "Vui lòng nhập email hoặc số điện thoại.";
+                return;
+            }
+
+            if (!password) {
+                passwordError.textContent = "Vui lòng nhập mật khẩu.";
+                return;
+            }
+
+            try {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = "Đang đăng nhập...";
+
+                const res = await fetch(`${API_BASE}/api/admin/login`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        identifier: identifier,
+                        password: password
+                    })
+                });
+
+                const data = await res.json();
+
+                if (!data.success) {
+                    loginMessage.textContent = data.message || "Đăng nhập thất bại.";
+                    return;
+                }
+
+                localStorage.setItem("admin", JSON.stringify(data.data));
+                window.location.href = "index.html";
+            } catch (error) {
+                loginMessage.textContent = "Không kết nối được server.";
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Đăng nhập <i class="ti-arrow-right"></i>';
+            }
+        });
+    </script>
+</body>
+
+</html>

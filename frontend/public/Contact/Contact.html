@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Liên hệ</title>
+
+  <link rel="stylesheet" href="./Contact.css" />
+  <script defer src="./Contact.js"></script>
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+</head>
+
+<body>
+  <section class="map-section">
+    <iframe
+      src="https://www.google.com/maps?q=Đại%20học%20Bách%20Khoa%20TP.HCM%20Cơ%20sở%202&output=embed"
+      loading="lazy"
+      allowfullscreen>
+    </iframe>
+
+    <div class="map-overlay">
+      <h2>Đại học Bách Khoa TP.HCM - Cơ sở 2</h2>
+      <p>Đường Hàn Thuyên, P. Linh Trung, TP. Thủ Đức, TP. Hồ Chí Minh</p>
+
+      <a 
+        href="https://www.google.com/maps?q=Đại+học+Bách+Khoa+TP.HCM+Cơ+sở+2" 
+        target="_blank"
+        class="map-link"
+      >
+        Xem trên Google Maps
+      </a>
+    </div>
+  </section>
+
+  <section class="contact-section">
+    <div class="contact-container">
+      <div class="contact-form">
+        <h1>Để lại lời nhắn</h1>
+
+        <form id="contactForm">
+          <input type="text" id="name" placeholder="Họ và tên" />
+          <input type="email" id="email" placeholder="Email" />
+          <input type="text" id="subject" placeholder="Chủ đề liên hệ" />
+          <textarea id="message" placeholder="Nội dung thông điệp"></textarea>
+
+          <button type="submit">Gửi</button>
+        </form>
+      </div>
+
+      <div class="contact-info">
+        <h1>Thông tin liên hệ</h1>
+        <h2>TRƯỜNG ĐẠI HỌC BÁCH KHOA - ĐHQG TP.HCM</h2>
+
+        <p><strong>Cơ sở 2:</strong></p>
+        <p>Đường Hàn Thuyên, Phường Linh Trung, TP. Thủ Đức, TP. Hồ Chí Minh</p>
+
+        <p><strong>Cơ sở 1:</strong></p>
+        <p>268 Lý Thường Kiệt, Phường 14, Quận 10, TP. Hồ Chí Minh</p>
+
+        <div class="info-row">
+          <i class="fa-solid fa-phone"></i>
+          <span><strong>Hotline:</strong> 028 3865 4087</span>
+        </div>
+
+        <div class="info-row">
+          <i class="fa-solid fa-envelope"></i>
+          <span><strong>Email:</strong> info@hcmut.edu.vn</span>
+        </div>
+
+        <div class="info-row">
+          <i class="fa-solid fa-location-dot"></i>
+          <span><strong>Địa chỉ:</strong> Đại học Bách Khoa TP.HCM - Cơ sở 2</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="float-buttons">
+    <a href="#" class="float-btn email">
+      <i class="fa-solid fa-envelope"></i>
+    </a>
+
+    <a href="#" class="float-btn zalo">
+      Zalo
+    </a>
+
+    <a href="tel:02838654087" class="float-btn phone">
+      <i class="fa-solid fa-phone"></i>
+    </a>
+  </div>
+  <div id="toast" class="toast"></div>
+</body>
+</html>
