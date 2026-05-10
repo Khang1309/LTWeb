@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:8000/api";
+const FLASH_SALES_API_BASE = "http://localhost:8000/api";
 
 function getImageUrl(imageUrl) {
     if (!imageUrl || imageUrl.trim() === "") {
@@ -24,7 +24,7 @@ function formatForInput(dateStr) {
 }
 
 async function loadFlashSales() {
-    const url = `${API_BASE}/admin/flash-sales`;
+    const url = `${FLASH_SALES_API_BASE}/admin/flash-sales`;
 
     try {
         const response = await fetch(url);
@@ -80,7 +80,7 @@ function renderFlashSales(sales) {
                     src="${getImageUrl(sale.flash_sale_image)}"
                     alt="${escapeHtml(sale.flash_sale_name)}"
                     style="height: 200px; object-fit: cover;"
-                    onerror="this.src='http://localhost:8000/uploads/flash-sales/default-flash-sale.jpg'"
+                    onerror="this.onerror=null; this.src='http://localhost:8000/uploads/flash-sales/default-flash-sale.jpg'"
                 >
 
                 <div class="card-body d-flex flex-column">
@@ -136,7 +136,7 @@ function clearSearch() {
 
 async function editFlashSale(id) {
     try {
-        const response = await fetch(`${API_BASE}/admin/flash-sales/detail?id=${id}`);
+        const response = await fetch(`${FLASH_SALES_API_BASE}/admin/flash-sales/detail?id=${id}`);
         const result = await response.json();
 
         if (!result.success) {
@@ -168,7 +168,7 @@ async function deleteFlashSale(id) {
     if (!ok) return;
 
     try {
-        const response = await fetch(`${API_BASE}/admin/flash-sales/delete?id=${id}`, {
+        const response = await fetch(`${FLASH_SALES_API_BASE}/admin/flash-sales/delete?id=${id}`, {
             method: "DELETE"
         });
 
@@ -211,8 +211,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const isUpdate = id !== "";
         const url = isUpdate
-            ? `${API_BASE}/admin/flash-sales/update?id=${id}`
-            : `${API_BASE}/admin/flash-sales`;
+            ? `${FLASH_SALES_API_BASE}/admin/flash-sales/update?id=${id}`
+            : `${FLASH_SALES_API_BASE}/admin/flash-sales`;
 
         try {
             const response = await fetch(url, {

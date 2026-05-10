@@ -17,6 +17,8 @@ import { useUserStore } from "@/store/userStore";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { checkCustomerStatusApi } from "@/apis/authApi";
+import { useCartStore } from "@/store/cartStore";
+import Cart from "@/page/Cart";
 
 function Header({ leftTrigger }: { leftTrigger: any }) {
   const navigate = useNavigate();
@@ -35,6 +37,8 @@ function Header({ leftTrigger }: { leftTrigger: any }) {
 
     setOpenUserPopup((prev) => !prev);
   };
+
+  const numofCartItems = useCartStore(s => s.items.length)
 
   const handleLogout = () => {
     logout();
@@ -109,45 +113,50 @@ function Header({ leftTrigger }: { leftTrigger: any }) {
           onClick={() => navigate("/cart")}
           className="flex flex-1 cursor-pointer flex-col items-center justify-center transition hover:text-blue-600"
         >
-          <ShoppingBasketIcon />
-          <div>Cart</div>
+          <div className="relative">
+            <ShoppingBasketIcon className="w-8 h-8 shrink-0" />
+            <div className="absolute w-4 h-4 bg-red-600 -top-1 -right-1 text-white rounded-full flex items-center justify-center">
+              <span className="text-[10px] font-bold leading-none">{numofCartItems}</span>
+            </div>
+          </div>
+          <div >Cart</div>
         </div>
 
         <div className="flex-1 flex justify-center items-center">
           <div className="relative inline-flex flex-col items-center">
             <div
-              className="flex justify-center items-center flex-col cursor-pointer"
+              className="flex justify-center items-center flex-col cursor-pointer  hover:text-blue-600"
               onClick={handleUserClick}
             >
               {(!userData || !userData.avatar) ? (
-                <CircleUserIcon className="w-10 h-10 shrink-0" />
+                <CircleUserIcon className="w-8 h-8 shrink-0" />
               ) : (
-                <img 
-                  src={userData.avatar.startsWith('http') ? userData.avatar : `http://localhost:8000/${userData.avatar}`} 
-                  alt="Avatar" 
-                  className="w-10 h-10 rounded-full object-cover shrink-0" 
+                <img
+                  src={userData.avatar.startsWith('http') ? userData.avatar : `http://localhost:8000/${userData.avatar}`}
+                  alt="Avatar"
+                  className="w-10 h-10 rounded-full object-cover shrink-0"
                   onError={(e) => { e.currentTarget.style.display = 'none'; }}
                 />
               )}
               {!userData ? (
-                <div>Log in</div>
+                <div className="flex-1">Log in</div>
               ) : (
-                <div className="text-center leading-tight">
-                  Hello, {userData.full_name}
+                <div className="text-center leading-tight flex-1 flex justify-center items-center">
+                  Hello, {userData.full_name[0]}
                 </div>
               )}
             </div>
 
             {userData && openUserPopup && (
-              <div className="absolute -right-8 top-full mt-2 w-72 bg-white rounded-xl shadow-lg border z-50 overflow-hidden">
-                <div className="flex items-center gap-3 p-4 border-b">
+              <div className="absolute -right-8 top-full mt-2 w-72 bg-white rounded-xl shadow-lg  z-50 overflow-hidden">
+                <div className="flex items-center gap-3 p-4 border-b cursor-default">
                   {(!userData || !userData.avatar) ? (
                     <CircleUserIcon className="w-10 h-10 shrink-0" />
                   ) : (
-                    <img 
-                      src={userData.avatar.startsWith('http') ? userData.avatar : `http://localhost:8000/${userData.avatar}`} 
-                      alt="Avatar" 
-                      className="w-10 h-10 rounded-full object-cover shrink-0" 
+                    <img
+                      src={userData.avatar.startsWith('http') ? userData.avatar : `http://localhost:8000/${userData.avatar}`}
+                      alt="Avatar"
+                      className="w-10 h-10 rounded-full object-cover shrink-0"
                     />
                   )}
 
@@ -168,25 +177,25 @@ function Header({ leftTrigger }: { leftTrigger: any }) {
                     setOpenUserPopup(false);
                     navigate("/profile");
                   }}
-                  className="w-full justify-start rounded-none h-12 border-b font-normal"
+                  className="w-full justify-start cursor-pointer rounded-none h-12 border-b font-normal"
                 >
                   Account Information
                 </Button>
                 <Button
-                    variant="ghost"
-                    onClick={() => {
-                      setOpenUserPopup(false);
-                      navigate("/orders");
-                    }}
-                    className="w-full justify-start rounded-none h-12 border-b font-normal"
-                  >
-                    My Orders
+                  variant="ghost"
+                  onClick={() => {
+                    setOpenUserPopup(false);
+                    navigate("/orders");
+                  }}
+                  className="w-full justify-start cursor-pointer rounded-none h-12 border-b font-normal"
+                >
+                  My Orders
                 </Button>
 
                 <Button
                   variant="ghost"
                   onClick={handleLogout}
-                  className="w-full justify-start rounded-none h-12 text-red-500 hover:text-red-500 hover:bg-red-50"
+                  className="w-full justify-start cursor-pointer rounded-none h-12 text-red-500 hover:text-red-500 hover:bg-red-50"
                 >
                   <LogOutIcon className="w-4 h-4 mr-2" />
                   Log Out

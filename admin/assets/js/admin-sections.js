@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:8000/api";
+const SECTIONS_API_BASE = "http://localhost:8000/api";
 
 function getImageUrl(imageUrl) {
     if (!imageUrl || imageUrl.trim() === "") {
@@ -11,7 +11,7 @@ function getImageUrl(imageUrl) {
 }
 
 async function loadSections() {
-    const url = `${API_BASE}/admin/sections`;
+    const url = `${SECTIONS_API_BASE}/admin/sections`;
 
     try {
         const response = await fetch(url);
@@ -46,8 +46,8 @@ function renderSections(sections) {
     }
 
     listEl.innerHTML = sections.map(sec => {
-        const isActive = sec.section_status == 1 
-            ? `<span class="badge bg-success">Đang hiển thị</span>` 
+        const isActive = sec.section_status == 1
+            ? `<span class="badge bg-success">Đang hiển thị</span>`
             : `<span class="badge bg-secondary">Đang ẩn</span>`;
 
         return `
@@ -58,7 +58,7 @@ function renderSections(sections) {
                     src="${getImageUrl(sec.section_image)}"
                     alt="${escapeHtml(sec.section_name)}"
                     style="height: 200px; object-fit: cover;"
-                    onerror="this.src='http://localhost:8000/uploads/sections/default-section.jpg'"
+                    onerror="this.onerror=null; this.src='http://localhost:8000/uploads/sections/default-section.jpg'"
                 >
 
                 <div class="card-body d-flex flex-column">
@@ -87,7 +87,7 @@ function renderSections(sections) {
 function searchSections() {
     const q = document.getElementById("sectionSearchInput").value.toLowerCase();
     const items = document.querySelectorAll("#sectionList .col-lg-6");
-    
+
     items.forEach(item => {
         const title = item.querySelector(".title").innerText.toLowerCase();
         if (title.includes(q)) {
@@ -106,7 +106,7 @@ function clearSearch() {
 
 async function editSection(id) {
     try {
-        const response = await fetch(`${API_BASE}/admin/sections/detail?id=${id}`);
+        const response = await fetch(`${SECTIONS_API_BASE}/admin/sections/detail?id=${id}`);
         const result = await response.json();
 
         if (!result.success) {
@@ -136,7 +136,7 @@ async function deleteSection(id) {
     if (!ok) return;
 
     try {
-        const response = await fetch(`${API_BASE}/admin/sections/delete?id=${id}`, {
+        const response = await fetch(`${SECTIONS_API_BASE}/admin/sections/delete?id=${id}`, {
             method: "DELETE"
         });
 
@@ -165,20 +165,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const id = document.getElementById("sectionId").value;
         const fileInput = document.getElementById("sectionImageFile");
-        
+
         const formData = new FormData();
         formData.append("name", document.getElementById("sectionName").value.trim());
         formData.append("status", document.getElementById("sectionStatus").value);
         formData.append("description", document.getElementById("sectionDesc").value.trim());
-        
+
         if (fileInput.files && fileInput.files.length > 0) {
             formData.append("image", fileInput.files[0]);
         }
 
         const isUpdate = id !== "";
         const url = isUpdate
-            ? `${API_BASE}/admin/sections/update?id=${id}`
-            : `${API_BASE}/admin/sections`;
+            ? `${SECTIONS_API_BASE}/admin/sections/update?id=${id}`
+            : `${SECTIONS_API_BASE}/admin/sections`;
 
         try {
             const response = await fetch(url, {
@@ -239,9 +239,9 @@ function showSectionMessage(message, type) {
 function escapeHtml(value) {
     if (value === null || value === undefined) return "";
     return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }

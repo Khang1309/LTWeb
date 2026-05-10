@@ -1,5 +1,5 @@
 import Autoplay from "embla-carousel-autoplay";
-import { Eye, Flame, RotateCcw, Search, ShoppingCart, Sparkles, Zap } from "lucide-react";
+import { Divide, Eye, Flame, RotateCcw, Search, ShoppingCart, Sparkles, Zap } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
@@ -41,6 +41,7 @@ import type {
 } from "@/schema/product";
 import { useCartStore } from "@/store/cartStore";
 import { useUserStore } from "@/store/userStore";
+import TimeCounter from "@/components/other/timeCounter";
 
 const formatPrice = (price: number | string) =>
   `${Number(price || 0).toLocaleString("vi-VN")} VND`;
@@ -50,6 +51,7 @@ function stockText(item: Pick<ProductVersion, "stock_quantity">) {
   if (Number(item.stock_quantity) <= 5) return "Low stock";
   return "In stock";
 }
+
 
 function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -154,6 +156,8 @@ function Products() {
     setPage(1);
   };
 
+
+
   const handleViewDetail = async (id: number) => {
     try {
       const res = await getProductDetailApi(id);
@@ -185,6 +189,18 @@ function Products() {
     }
 
     showToast("Added to cart.", "success");
+  };
+
+  const itemsRef = useRef(new Map());
+
+
+  // 2. A reusable function that takes a ref and scrolls to it
+  const scrollToCategoryId = (id: any) => {
+    // Get the exact HTML node from our Map dictionary
+    const node = itemsRef.current.get(id);
+    if (node) {
+      node.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
 
   const renderProductCard = (
@@ -324,116 +340,215 @@ function Products() {
       <section className="bg-white px-4 py-10 text-left md:px-8 lg:px-12">
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_420px] lg:items-end">
           <div>
-            <Badge variant="outline" className="mb-4 bg-blue-50 text-blue-700">
+            {/* <Badge variant="outline" className="mb-4 bg-blue-50 text-blue-700">
               The Reader Bookstore
-            </Badge>
-            <h1 className="m-0 max-w-3xl text-4xl font-extrabold tracking-normal text-slate-950 md:text-5xl">
+            </Badge> */}
+            <h1 className="m-0 max-w-3xl text-4xl font-extrabold text-blue-700 tracking-normal md:text-5xl">
               Books, study gadgets, and office supplies in one place.
             </h1>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600">
-              Products, flash sales, and curated sections below are synced from the store backend API.
+            <p className="mt-4 max-w-2xl text-base leading-7">
+
             </p>
           </div>
 
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-            <div className="flex items-center gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
-                <Input
-                  className="h-12 bg-white pl-10"
-                  placeholder="Search books, authors, SKU..."
-                  value={keyword}
-                  onChange={(e) => setKeyword(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") handleSearch();
-                  }}
-                />
-              </div>
-              <Button className="h-12 px-5" onClick={handleSearch}>
-                Search
-              </Button>
-              {(searchText || selectedCategoryId) && (
-                <Button size="icon" variant="outline" className="h-12 w-12" onClick={handleClearSearch}>
-                  <RotateCcw className="h-5 w-5" />
-                </Button>
-              )}
-            </div>
-          </div>
+
         </div>
       </section>
 
       <div className="mx-auto max-w-7xl space-y-12 px-4 py-10 md:px-8 lg:px-12">
         <section className="space-y-4 text-left">
           <div className="flex items-center justify-between gap-4">
-            <h2 className="m-0 text-2xl font-bold text-slate-950">Product Categories</h2>
+            <h2 className="m-0 text-2xl font-bold text-blue-600">Product Categories</h2>
             {featureLoading && <span className="text-sm text-slate-500">Loading...</span>}
           </div>
-          <div className="flex gap-3 overflow-x-auto pb-2">
-            <Button
-              variant={selectedCategoryId === null ? "default" : "outline"}
-              className="shrink-0 rounded-full"
-              onClick={() => handleCategory(null)}
-            >
-              All
-            </Button>
-            {categories.map((cat) => (
-              <Button
-                key={cat.category_id}
-                variant={selectedCategoryId === cat.category_id ? "default" : "outline"}
-                className="shrink-0 rounded-full"
-                onClick={() => handleCategory(cat.category_id)}
-              >
-                {cat.category_name}
-              </Button>
-            ))}
-          </div>
+          <Carousel
+            opts={{
+              align: "start",
+              dragFree: true,
+            }}
+            className="w-full bg-white rounded-2xl p-4 "
+          >
+            <CarouselContent className="-ml-3 pb-2 gap-4 flex items-center justify-center">
+
+              {activeFlashSales.map((sale) => (
+                <CarouselItem key={sale.flash_sale_id} className="pl-3 basis-auto"
+                  onClick={() => scrollToCategoryId(sale.flash_sale_name)}>
+                  <img
+                    src={getImageUrl(sale.flash_sale_image)}
+                    alt={sale.flash_sale_name}
+                    className="w-10 h-10 mx-auto"
+                    onError={(e) => {
+                      e.currentTarget.src = "/icons.svg";
+                    }}
+                  />
+                  <div
+                    className="rounded-full"
+                  >
+                    {sale.flash_sale_name}
+                  </div>
+                </CarouselItem>
+              ))}
+
+              {/* Mapped Category Items */}
+              {sections.map((sec) => (
+                <CarouselItem key={sec.section_id} className="pl-3 basis-auto"
+                  onClick={() => scrollToCategoryId(sec.section_name)}>
+                  <img
+                    src={getImageUrl(sec.section_image)}
+                    alt={sec.section_name}
+                    className="w-10 h-10 mx-auto"
+                    onError={(e) => {
+                      e.currentTarget.src = "/icons.svg";
+                    }}
+                  />
+                  <div
+                    className="rounded-full"
+                  >
+                    {sec.section_name}
+                  </div>
+                </CarouselItem>
+              ))}
+
+            </CarouselContent>
+
+            {/* Optional: Add navigation arrows (hidden on mobile since users can just swipe) */}
+            <CarouselPrevious className="hidden md:flex" />
+            <CarouselNext className="hidden md:flex" />
+          </Carousel>
         </section>
 
-        {activeFlashSales.map((sale) => (
-          <section key={sale.flash_sale_id} className="rounded-lg bg-gradient-to-r from-red-600 to-orange-500 p-5 text-left shadow-xl md:p-8">
-            <div className="mb-6 flex flex-col gap-4 text-white md:flex-row md:items-end md:justify-between">
+
+
+
+      </div>
+
+      {activeFlashSales.map((sale) => (
+        <section key={sale.flash_sale_id} className="scroll-mt-24  w-full bg-gradient-to-r from-red-600 to-orange-500 p-5 text-left shadow-xl md:p-8 my-4"
+          ref={(node) => {
+            if (node) {
+              itemsRef.current.set(sale.flash_sale_name, node);
+            } else {
+              itemsRef.current.delete(sale.flash_sale_name);
+            }
+          }}>
+          <div className="mb-6 flex flex-col gap-4 text-white md:flex-row md:items-end md:justify-between">
+            <div className="flex gap-2">
+              <div className="mb-2 flex items-center gap-2">
+                <Flame className="h-7 w-7 text-yellow-200" />
+                {/* <Badge className="bg-white text-red-700">{sale.sale_status}</Badge> */}
+              </div>
               <div>
-                <div className="mb-2 flex items-center gap-2">
-                  <Flame className="h-7 w-7 text-yellow-200" />
-                  <Badge className="bg-white text-red-700">{sale.sale_status}</Badge>
-                </div>
                 <h2 className="m-0 text-3xl font-extrabold text-white">{sale.flash_sale_name}</h2>
+
                 <p className="mt-2 max-w-2xl text-sm text-white/85">{sale.flash_sale_description}</p>
               </div>
-              <div className="text-sm text-white/90">
-                {sale.flash_sale_start_time} - {sale.flash_sale_end_time}
-              </div>
             </div>
-
-            <Carousel
-              plugins={[plugin.current]}
-              onMouseEnter={plugin.current.stop}
-              onMouseLeave={plugin.current.reset}
-              opts={{ align: "start", dragFree: true }}
-            >
-              <CarouselContent className="-ml-4">
-                {sale.products.map(renderFlashProduct)}
-              </CarouselContent>
-              <CarouselPrevious className="hidden border-0 bg-white/20 text-white hover:bg-white hover:text-red-700 lg:flex" />
-              <CarouselNext className="hidden border-0 bg-white/20 text-white hover:bg-white hover:text-red-700 lg:flex" />
-            </Carousel>
-          </section>
-        ))}
-
-        <section className="space-y-6 text-left">
-          <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-            <div>
-              <h2 className="m-0 flex items-center gap-2 text-3xl font-extrabold text-slate-950">
-                <Zap className="h-7 w-7 text-blue-600" />
-                All Products
-              </h2>
-              <p className="mt-2 text-sm text-slate-500">
-                {pagination.total_items} result{pagination.total_items === 1 ? "" : "s"}
-                {searchText ? ` for "${searchText}"` : ""}
-              </p>
+            <div className="text-xl font-bold text-white/90 flex justify-center items-center gap-4">
+              {
+                (new Date().getTime() <= new Date(sale.flash_sale_end_time).getTime()) ?
+                  <>
+                    <div>Start In</div>
+                    <TimeCounter targetDate={new Date(sale.flash_sale_start_time)} />
+                  </>
+                  :
+                  <>
+                    <div>End In</div>
+                    <TimeCounter targetDate={new Date(sale.flash_sale_end_time)} />
+                  </>
+              }
             </div>
           </div>
 
+          <Carousel
+            plugins={[plugin.current]}
+            onMouseEnter={plugin.current.stop}
+            onMouseLeave={plugin.current.reset}
+            opts={{ align: "start", dragFree: true }}
+          >
+            <CarouselContent className="-ml-4">
+              {sale.products.map(renderFlashProduct)}
+            </CarouselContent>
+            <CarouselPrevious className="hidden border-0 bg-white/20 text-white hover:bg-white hover:text-red-700 lg:flex" />
+            <CarouselNext className="hidden border-0 bg-white/20 text-white hover:bg-white hover:text-red-700 lg:flex" />
+          </Carousel>
+        </section>
+      ))}
+
+      <div className="mx-auto max-w-7xl px-4 py-10 md:px-8 lg:px-12">
+        {sections.map((section) => (
+          <div className="my-4">
+            <div ref={(node) => {
+              if (node) {
+                itemsRef.current.set(section.section_name, node);
+              } else {
+                itemsRef.current.delete(section.section_name);
+              }
+            }} className="relative bg-blue-600 p-4 rounded-t-3xl text-white w-[33%] mx-auto">
+              <div className="relative z-10 scroll-mt-30 ">
+
+                <h2 className="m-0 text-3xl font-extrabold text-white">{section.section_name}</h2>
+                <p className="mt-3 text-sm leading-6 text-white/80">{section.section_description}</p>
+              </div>
+            </div>
+
+            <section key={section.section_id} className="overflow-hidden rounded-2xl border-slate-200 bg-gradient-to-b from-blue-600 to-30% to-white text-left shadow-sm"
+            >
+              <div className="p-8">
+                <div className="grid grid-cols-1 gap-4 p-5 sm:grid-cols-2 xl:grid-cols-3">
+                  {(section.products || []).slice(0, 6).map((item) => renderProductCard(item, { compact: true }))}
+                </div>
+              </div>
+            </section>
+          </div>
+        ))}
+
+        <div className="bg-white p-4 gap-4 flex flex-col">
+          <section className="space-y-6 text-left ">
+            <div className="flex flex-col  md:flex-row md:items-end md:justify-between">
+
+              <div className="min-w-10">
+                <h2 className="m-0 flex items-center gap-2 text-3xl font-extrabold text-slate-950">
+
+                  Our Products
+                </h2>
+                <p className="mt-2 text-sm text-slate-500">
+                  {pagination.total_items} result{pagination.total_items === 1 ? "" : "s"}
+                  {searchText ? ` for "${searchText}"` : ""}
+                </p>
+
+              </div>
+              <div className="rounded-lg bw-auto">
+                <div className="flex items-center gap-2">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+                    <Input
+                      className="h-10 bg-white pl-10"
+                      placeholder="Search books, authors, SKU..."
+                      value={keyword}
+                      onChange={(e) => setKeyword(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") handleSearch();
+                      }}
+                    />
+                  </div>
+                  <Button className="h-10 px-4" onClick={handleSearch}>
+                    Search
+                  </Button>
+                  {(searchText || selectedCategoryId) && (
+                    <Button size="icon" variant="outline" className="h-12 w-12" onClick={handleClearSearch}>
+                      <RotateCcw className="h-5 w-5" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+
+
+          </section>
+
+
+          {/* Product list */}
           {loading ? (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {Array.from({ length: 8 }).map((_, i) => (
@@ -520,104 +635,78 @@ function Products() {
               </PaginationContent>
             </Pagination>
           )}
-        </section>
-
-        {sections.map((section) => (
-          <section key={section.section_id} className="overflow-hidden rounded-lg border border-slate-200 bg-white text-left shadow-sm">
-            <div className="grid gap-0 lg:grid-cols-[360px_1fr]">
-              <div className="relative min-h-64 bg-slate-900 p-8 text-white">
-                {section.section_image && (
-                  <img
-                    src={getImageUrl(section.section_image)}
-                    alt={section.section_name}
-                    className="absolute inset-0 h-full w-full object-cover opacity-30"
-                    onError={(e) => {
-                      e.currentTarget.style.display = "none";
-                    }}
-                  />
-                )}
-                <div className="relative z-10">
-                  <Sparkles className="mb-4 h-8 w-8 text-yellow-300" />
-                  <h2 className="m-0 text-3xl font-extrabold text-white">{section.section_name}</h2>
-                  <p className="mt-3 text-sm leading-6 text-white/80">{section.section_description}</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-1 gap-4 p-5 sm:grid-cols-2 xl:grid-cols-3">
-                {(section.products || []).slice(0, 6).map((item) => renderProductCard(item, { compact: true }))}
-              </div>
-            </div>
-          </section>
-        ))}
-      </div>
-
-      {selectedProduct && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm">
-          <div className="grid max-h-[90vh] w-full max-w-5xl overflow-hidden rounded-lg bg-white shadow-2xl lg:grid-cols-[380px_1fr]">
-            <div className="bg-slate-100 p-6">
-              <img
-                src={getImageUrl(selectedProduct.image_url)}
-                alt={selectedProduct.product_name}
-                className="h-full max-h-[520px] w-full object-contain"
-                onError={(e) => {
-                  e.currentTarget.src = "/icons.svg";
-                }}
-              />
-            </div>
-            <div className="overflow-y-auto p-6 text-left">
-              <div className="mb-4 flex items-start justify-between gap-4">
-                <div>
-                  <Badge variant="outline" className="mb-3">{selectedProduct.brand || "Bookstore"}</Badge>
-                  <h2 className="m-0 text-3xl font-extrabold text-slate-950">{selectedProduct.product_name}</h2>
-                  <p className="mt-2 text-sm text-slate-500">SKU: {selectedProduct.sku}</p>
-                </div>
-                <Button variant="ghost" onClick={() => setSelectedProduct(null)}>Dong</Button>
-              </div>
-
-              <p className="text-3xl font-extrabold text-blue-700">{formatPrice(selectedProduct.price)}</p>
-              <div className="mt-5 grid grid-cols-2 gap-4 rounded-lg bg-slate-50 p-4 text-sm">
-                <div>
-                  <p className="text-slate-500">Version</p>
-                  <p className="font-semibold text-slate-900">{selectedProduct.version_name}</p>
-                </div>
-                <div>
-                  <p className="text-slate-500">Format</p>
-                  <p className="font-semibold text-slate-900">{selectedProduct.format_type}</p>
-                </div>
-                <div>
-                  <p className="text-slate-500">Language</p>
-                  <p className="font-semibold text-slate-900">{selectedProduct.language || "N/A"}</p>
-                </div>
-                <div>
-                  <p className="text-slate-500">Stock</p>
-                  <p className="font-semibold text-slate-900">{selectedProduct.stock_quantity}</p>
-                </div>
-              </div>
-
-              <div className="mt-6">
-                <h3 className="text-lg font-bold text-slate-950">Product Description</h3>
-                <p className="mt-2 leading-7 text-slate-600">
-                  {selectedProduct.description || "This product does not have a detailed description yet."}
-                </p>
-              </div>
-
-              <div className="mt-8 flex gap-3">
-                <Button
-                  className="h-12 flex-1"
-                  disabled={Number(selectedProduct.stock_quantity) <= 0}
-                  onClick={() => handleAddToCart(selectedProduct.version_id)}
-                >
-                  <ShoppingCart className="mr-2 h-5 w-5" />
-                  Add to Cart
-                </Button>
-                <Button asChild variant="outline" className="h-12">
-                  <Link to={`/products/${selectedProduct.version_id}`}>View Details Page</Link>
-                </Button>
-              </div>
-            </div>
-          </div>
         </div>
-      )}
 
+        {selectedProduct && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm">
+            <div className="grid max-h-[90vh] w-full max-w-5xl overflow-hidden rounded-lg bg-white shadow-2xl lg:grid-cols-[380px_1fr]">
+              <div className="bg-slate-100 p-6">
+                <img
+                  src={getImageUrl(selectedProduct.image_url)}
+                  alt={selectedProduct.product_name}
+                  className="h-full max-h-[520px] w-full object-contain"
+                  onError={(e) => {
+                    e.currentTarget.src = "/icons.svg";
+                  }}
+                />
+              </div>
+              <div className="overflow-y-auto p-6 text-left">
+                <div className="mb-4 flex items-start justify-between gap-4">
+                  <div>
+                    <Badge variant="outline" className="mb-3">{selectedProduct.brand || "Bookstore"}</Badge>
+                    <h2 className="m-0 text-3xl font-extrabold text-slate-950">{selectedProduct.product_name}</h2>
+                    <p className="mt-2 text-sm text-slate-500">SKU: {selectedProduct.sku}</p>
+                  </div>
+                  <Button variant="ghost" onClick={() => setSelectedProduct(null)}>Dong</Button>
+                </div>
+
+                <p className="text-3xl font-extrabold text-blue-700">{formatPrice(selectedProduct.price)}</p>
+                <div className="mt-5 grid grid-cols-2 gap-4 rounded-lg bg-slate-50 p-4 text-sm">
+                  <div>
+                    <p className="text-slate-500">Version</p>
+                    <p className="font-semibold text-slate-900">{selectedProduct.version_name}</p>
+                  </div>
+                  <div>
+                    <p className="text-slate-500">Format</p>
+                    <p className="font-semibold text-slate-900">{selectedProduct.format_type}</p>
+                  </div>
+                  <div>
+                    <p className="text-slate-500">Language</p>
+                    <p className="font-semibold text-slate-900">{selectedProduct.language || "N/A"}</p>
+                  </div>
+                  <div>
+                    <p className="text-slate-500">Stock</p>
+                    <p className="font-semibold text-slate-900">{selectedProduct.stock_quantity}</p>
+                  </div>
+                </div>
+
+                <div className="mt-6">
+                  <h3 className="text-lg font-bold text-slate-950">Product Description</h3>
+                  <p className="mt-2 leading-7 text-slate-600">
+                    {selectedProduct.description || "This product does not have a detailed description yet."}
+                  </p>
+                </div>
+
+                <div className="mt-8 flex gap-3">
+                  <Button
+                    className="h-12 flex-1"
+                    disabled={Number(selectedProduct.stock_quantity) <= 0}
+                    onClick={() => handleAddToCart(selectedProduct.version_id)}
+                  >
+                    <ShoppingCart className="mr-2 h-5 w-5" />
+                    Add to Cart
+                  </Button>
+                  <Button asChild variant="outline" className="h-12">
+                    <Link to={`/products/${selectedProduct.version_id}`}>View Details Page</Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        )}
+      </div>
       {toast.show && (
         <div className={`toast ${toast.type} show`}>{toast.message}</div>
       )}

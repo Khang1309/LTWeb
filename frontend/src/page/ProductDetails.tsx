@@ -160,9 +160,9 @@ function ProductDetails() {
                 <ShoppingCart className="mr-2 h-5 w-5" />
                 Add to Cart
               </Button>
-              <Button asChild variant="outline" className="h-12 flex-1">
+              {/* <Button asChild variant="outline" className="h-12 flex-1">
                 <Link to="/cart">View Cart</Link>
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>
