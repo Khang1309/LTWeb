@@ -1,3 +1,7 @@
+CREATE DATABASE IF NOT EXISTS web_btl
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+
 USE web_btl;
 
 
@@ -367,92 +371,7 @@ CREATE TABLE product_section_details (
 );
 
 
--- Insert
 
--- =========================
--- FLASH SALES
--- =========================
-INSERT INTO flash_sales (flash_sale_name, flash_sale_description, flash_sale_image, flash_sale_start_time, flash_sale_end_time, flash_sale_is_active) VALUES
-('Ngày Sách Việt Nam 2026',  'Giảm giá sách nhân ngày Sách Việt Nam', 'flash-sale-book-day.jpg', '2026-04-21 00:00:00', '2026-04-21 23:59:59', FALSE),
-('Flash Sale Cuối Tuần',     'Flash sale cuối tuần - giảm giá sốc', 'flash-sale-weekend.jpg', '2026-05-10 18:00:00', '2026-05-10 22:00:00', TRUE),
-('Super Tech Deal',          'Siêu giảm giá phụ kiện công nghệ', 'flash-sale-tech.jpg', '2026-06-01 00:00:00', '2026-06-01 23:59:59', TRUE);
-
--- =========================
--- FLASH SALE PRODUCTS
--- Note: using version_id is better here — consider refactoring
--- For now, inserting against product_id as schema currently stands
--- =========================
-INSERT INTO flash_sale_products (flash_sale_id, version_id, sale_price, stock_allocated, stock_sold) VALUES
--- Ngày Sách Việt Nam: books on sale
-(1, 1, 89000,   30, 30),   -- Clean Code (product 1, version 1)
-(1, 4, 140000,  20, 15),   -- The Pragmatic Programmer (product 2, version 4)
-(1, 7, 75000,   50, 42),   -- Atomic Habits (product 3, version 7)
-(1, 13, 65000,   40, 40),  -- Think & Grow Rich (product 5, version 13) sold out
-
--- Flash Sale Cuối Tuần: mix of books + accessories
-(2, 7, 79000,   30, 8),    -- Atomic Habits (product 3, version 7)
-(2, 10, 120000,  25, 3),   -- Deep Work (product 4, version 10)
-(2, 16, 199000,  15, 5),   -- Mouse discounted (product 6, version 16)
-(2, 25, 145000,  20, 0),   -- A5 Notebook (product 9, version 25)
-
--- Super Tech Deal: tech accessories only
-(3, 16, 189000,  20, 0),   -- Mouse (product 6, version 16)
-(3, 19, 1390000, 10, 0),   -- Keyboard (product 7, version 19)
-(3, 22, 650000,  15, 0),   -- USB-C Hub (product 8, version 22)
-(3, 28, 550000, 12, 0);    -- Desk Lamp (product 10, version 28)
-
--- =========================
--- PRODUCT SECTIONS
--- =========================
-INSERT INTO product_section (section_name, section_image, section_status, section_description) VALUES
-('Sách Nổi Bật',        'banner-featured-books.jpg', 1, 'Tuyển chọn những cuốn sách được yêu thích nhất'),
-('Công Nghệ & Gadget',  'banner-tech.jpg', 1, 'Phụ kiện công nghệ chất lượng cao'),
-('Văn Phòng Phẩm',      'banner-office.jpg', 1, 'Văn phòng phẩm cao cấp cho công việc'),
-('Mới Về Hôm Nay',      'banner-new-arrivals.jpg', 1, 'Sản phẩm mới nhất vừa cập nhật');
-
--- =========================
--- PRODUCT SECTION DETAILS
--- =========================
-INSERT INTO product_section_details (section_id, product_id, display_order) VALUES
--- Sách Nổi Bật
-(1, 1, 1),
-(1, 2, 2),
-(1, 3, 3),
-(1, 4, 4),
-(1, 5, 5),
-
--- Công Nghệ & Gadget
-(2, 6, 1),
-(2, 7, 2),
-(2, 8, 3),
-(2, 10, 4),
-
--- Văn Phòng Phẩm
-(3, 9, 1),
-(3, 10, 2),
-
--- Mới Về Hôm Nay
-(4, 7, 1),
-(4, 8, 2),
-(4, 3, 3);
-
-
-INSERT INTO site_settings (setting_key, setting_value, setting_group) VALUES
--- General
-('site_name',        'My Book Store',               'general'),
-('site_logo_url',    'logo.png',                    'general'),
-('site_favicon_url', 'favicon.ico',                 'general'),
-
--- Contact (the public page your admin needs to edit)
-('contact_email',    'support@store.com',           'contact'),
-('contact_phone',    '0901000001',                  'contact'),
-('contact_address',  '123 Le Loi, Ho Chi Minh City','contact'),
-('facebook_url',     'https://facebook.com/store',  'social'),
-('zalo_url',         'https://zalo.me/store',       'social'),
-
--- SEO
-('meta_title',       'My Book Store - Sách & Văn phòng phẩm', 'seo'),
-('meta_description', 'Mua sách, bàn phím, chuột...',          'seo');
 
 
 -- =========================================================
@@ -465,15 +384,59 @@ INSERT INTO site_settings (setting_key, setting_value, setting_group) VALUES
 -- Password for all admins: admin123
 -- Password for all customers: customer123
 INSERT INTO users (full_name, email, password_hash, user_role, phone) VALUES
-('Nguyen Van Admin',  'admin1@store.com', '$2y$10$DkisQjZZJSsWYSlVxtsD5.KEnIPgLtKq4Hs4DDPEvxWnEiFqpjy8u', 'admin',    '0901000001'),
-('Tran Thi Manager',  'admin2@store.com', '$2y$10$DkisQjZZJSsWYSlVxtsD5.KEnIPgLtKq4Hs4DDPEvxWnEiFqpjy8u', 'admin',    '0901000002'),
-('Le Hoang Supervisor','admin3@store.com','$2y$10$DkisQjZZJSsWYSlVxtsD5.KEnIPgLtKq4Hs4DDPEvxWnEiFqpjy8u', 'admin',    '0901000003'),
-('Le Minh Customer',  'customer1@gmail.com','$2y$10$Tqk5.JbNbd07tYZrh89X4ORzd4LE793uFk/YqF9i.wDKBCjV6o9WC','customer','0912000001'),
-('Pham Ngoc Lan',     'customer2@gmail.com','$2y$10$Tqk5.JbNbd07tYZrh89X4ORzd4LE793uFk/YqF9i.wDKBCjV6o9WC','customer','0912000002'),
-('Hoang Gia Bao',     'customer3@gmail.com','$2y$10$Tqk5.JbNbd07tYZrh89X4ORzd4LE793uFk/YqF9i.wDKBCjV6o9WC','customer','0912000003'),
-('Nguyen Thu Ha',     'customer4@gmail.com','$2y$10$Tqk5.JbNbd07tYZrh89X4ORzd4LE793uFk/YqF9i.wDKBCjV6o9WC','customer','0912000004'),
-('Tran Quoc Viet',    'customer5@gmail.com','$2y$10$Tqk5.JbNbd07tYZrh89X4ORzd4LE793uFk/YqF9i.wDKBCjV6o9WC','customer','0912000005'),
-('Do Minh Anh',       'customer6@gmail.com','$2y$10$Tqk5.JbNbd07tYZrh89X4ORzd4LE793uFk/YqF9i.wDKBCjV6o9WC','customer','0912000006');
+-- password: admin123
+('Nguyen Van An', 'admin1@store.com',
+'$2y$12$8T11Vyi31Jgxhw3fGWDzIuo3f4thxSpf0QHGyj2nNcdueJ6eBEVuy',
+'admin',
+'0901000001'),
+
+-- password: admin234
+('Tran Thi Kieu Nga', 'admin2@store.com',
+'$2y$12$bc4YwfMZrFGOkG1WRWkXDOTItP/t2Ls/mMjpWMm.9GhjpvTQX2iCO',
+'admin',
+'0901000002'),
+
+-- password: admin345
+('Le Hoang Minh', 'admin3@store.com',
+'$2y$12$5pwuVk4vGX2IWkiE/8PLa.UisW.L7B0tz1pLq6S5rdqYCW3H2KcyW',
+'admin',
+'0901000003'),
+
+-- password: customer123
+('Le Minh Quan', 'customer1@gmail.com',
+'$2y$12$yDdb7q4WXP8eZzJonk0yue9guPVu6DwdxYGQAmaTX.Fkx/ySacFii',
+'customer',
+'0912000001'),
+
+-- password: customer234
+('Pham Ngoc Lan', 'customer2@gmail.com',
+'$2y$12$g6Sj70SdWZdTPxu3VEEDAOe1hMUKcKce7OmQhlZl.ALYo7ERdgfG2',
+'customer',
+'0912000002'),
+
+-- password: customer345
+('Hoang Gia Bao', 'customer3@gmail.com',
+'$2y$12$CFZhPCSdlJ.ppWgP/cE/z.6pSfBj3anrbpgxf7QpnJr8Cf4Gl7KBy',
+'customer',
+'0912000003'),
+
+-- password: customer456
+('Nguyen Thu Ha', 'customer4@gmail.com',
+'$2y$12$Zbc28O9R81qmxep64NP37.oHaZjW4c88k5yMNmmxSHDxKZsmBBSCS',
+'customer',
+'0912000004'),
+
+-- password: customer567
+('Tran Quoc Viet', 'customer5@gmail.com',
+'$2y$12$77bQ7/zhfhwA.QQWejpIi.5cI65vrQOLwilbA9WEx83QqXOEbwmlu',
+'customer',
+'0912000005'),
+
+-- password: customer678
+('Do Minh Anh', 'customer6@gmail.com',
+'$2y$12$Z42d/kKF7r0wJM4pzwkxvuDE9o7xDv5sjrhuX6v3JBQ5RBTvSFBr2',
+'customer',
+'0912000006');
 -- =========================
 -- ADMINS
 -- =========================
@@ -496,16 +459,16 @@ INSERT INTO customers (customer_id, shipping_address, receiver_name, receiver_ph
 -- =========================
 -- CATEGORIES
 -- =========================
+
 INSERT INTO categories (category_name, parent_category_id) VALUES
 ('Books', NULL),
 ('Programming', 1),
 ('Business', 1),
 ('Self-help', 1),
-('Technology', NULL),
-('Accessories', NULL),
-('Office Supplies', NULL),
+('Novel', 1),
+('Manga', 1),
+('Light Novel', 1),
 ('Best Seller', NULL);
-
 -- =========================
 -- PRODUCTS (10 products)
 -- =========================
@@ -515,11 +478,11 @@ INSERT INTO products (product_name, brand, description, created_by_admin_id, upd
 ('Atomic Habits', 'Avery', 'An easy and proven way to build good habits.', 1, 2),
 ('Deep Work', 'Grand Central Publishing', 'Rules for focused success in a distracted world.', 2, 2),
 ('Think and Grow Rich', 'The Ralston Society', 'A classic personal success book.', 2, 3),
-('Wireless Mouse M185', 'Logitech', 'Compact wireless mouse for office and study.', 1, 2),
-('Mechanical Keyboard K8', 'Keychron', 'Hot-swappable wireless mechanical keyboard.', 1, 3),
-('USB-C Hub 7 in 1', 'Anker', 'Multiport adapter for laptop and tablet.', 2, 2),
-('A5 Notebook Premium', 'Moleskine', 'Hardcover notebook for writing and planning.', 3, 3),
-('Desk Lamp LED Pro', 'Xiaomi', 'Adjustable LED desk lamp for study and work.', 1, 3);
+('One Piece Vol.1', 'Shueisha', 'Adventure manga by Eiichiro Oda.', 1, 2),
+('Naruto Vol.1', 'Shueisha', 'Ninja action manga by Masashi Kishimoto.', 1, 3),
+('Doraemon Vol.1', 'Shogakukan', 'Classic manga for all ages.', 2, 2),
+('Your Name', 'Kadokawa', 'Japanese light novel based on the animated film.', 3, 3),
+('Harry Potter and the Sorcerer''s Stone', 'Bloomsbury', 'Fantasy novel about a young wizard.', 1, 3);
 
 -- =========================
 -- PRODUCT_CATEGORIES
@@ -530,11 +493,11 @@ INSERT INTO product_categories (product_id, category_id) VALUES
 (3, 1), (3, 4), (3, 8),
 (4, 1), (4, 4),
 (5, 1), (5, 3),
-(6, 6), (6, 5),
-(7, 6), (7, 5), (7, 8),
-(8, 5), (8, 6),
-(9, 7),
-(10, 5), (10, 7);
+(6, 1), (6, 6), (6, 8),
+(7, 1), (7, 6),
+(8, 1), (8, 6),
+(9, 1), (9, 7), (9, 8),
+(10, 1), (10, 5), (10, 8);
 
 -- =========================
 -- PRODUCT_VERSIONS (30 versions total)
@@ -567,30 +530,30 @@ VALUES
 (5, 'P005-V02', 'Hardcover - English', 'hardcover', 'English', 'Hard Cover', 'Classic Edition', 210000, 18, 'think-grow-rich-hardcover-en.jpg', 'available'),
 (5, 'P005-V03', 'eBook - English', 'ebook', 'English', NULL, 'Digital Edition', 70000, 999, 'think-grow-rich-ebook-en.jpg', 'available'),
 
--- Product 6: Wireless Mouse M185
-(6, 'P006-V01', 'Black Version', 'special_edition', 'Universal', NULL, 'Standard', 250000, 40, 'mouse-black.jpg', 'available'),
-(6, 'P006-V02', 'Blue Version', 'special_edition', 'Universal', NULL, 'Standard', 255000, 25, 'mouse-blue.jpg', 'available'),
-(6, 'P006-V03', 'Grey Version', 'special_edition', 'Universal', NULL, 'Standard', 260000, 0, 'mouse-grey.jpg', 'out_of_stock'),
+-- Product 6: One Piece Vol.1
+(6, 'P006-V01', 'Paperback - Vietnamese', 'paperback', 'Vietnamese', 'Soft Cover', 'Vietnamese Edition', 35000, 120, 'one-piece-vn.jpg', 'available'),
+(6, 'P006-V02', 'Paperback - English', 'paperback', 'English', 'Soft Cover', 'English Edition', 95000, 40, 'one-piece-en.jpg', 'available'),
+(6, 'P006-V03', 'Collector Edition - Japanese', 'special_edition', 'Japanese', 'Soft Cover', 'Collector Edition', 180000, 15, 'one-piece-jp-collector.jpg', 'available'),
 
--- Product 7: Mechanical Keyboard K8
-(7, 'P007-V01', 'White Backlight - Red Switch', 'special_edition', 'Universal', NULL, 'K8 Standard', 1590000, 14, 'k8-red-switch.jpg', 'available'),
-(7, 'P007-V02', 'RGB - Brown Switch', 'special_edition', 'Universal', NULL, 'K8 RGB', 1890000, 9, 'k8-brown-switch.jpg', 'available'),
-(7, 'P007-V03', 'RGB - Blue Switch', 'special_edition', 'Universal', NULL, 'K8 RGB', 1890000, 0, 'k8-blue-switch.jpg', 'out_of_stock'),
+-- Product 7: Naruto Vol.1
+(7, 'P007-V01', 'Paperback - Vietnamese', 'paperback', 'Vietnamese', 'Soft Cover', 'Vietnamese Edition', 35000, 100, 'naruto-vn.jpg', 'available'),
+(7, 'P007-V02', 'Paperback - English', 'paperback', 'English', 'Soft Cover', 'English Edition', 90000, 35, 'naruto-en.jpg', 'available'),
+(7, 'P007-V03', 'Collector Edition - Japanese', 'special_edition', 'Japanese', 'Soft Cover', 'Collector Edition', 170000, 0, 'naruto-jp-collector.jpg', 'out_of_stock'),
 
--- Product 8: USB-C Hub 7 in 1
-(8, 'P008-V01', 'Space Grey', 'special_edition', 'Universal', NULL, '2025 Edition', 790000, 32, 'hub-space-grey.jpg', 'available'),
-(8, 'P008-V02', 'Silver', 'special_edition', 'Universal', NULL, '2025 Edition', 790000, 20, 'hub-silver.jpg', 'available'),
-(8, 'P008-V03', 'Black', 'special_edition', 'Universal', NULL, '2025 Edition', 810000, 11, 'hub-black.jpg', 'available'),
+-- Product 8: Doraemon Vol.1
+(8, 'P008-V01', 'Paperback - Vietnamese', 'paperback', 'Vietnamese', 'Soft Cover', 'Vietnamese Edition', 30000, 150, 'doraemon-vn.jpg', 'available'),
+(8, 'P008-V02', 'Paperback - English', 'paperback', 'English', 'Soft Cover', 'English Edition', 85000, 30, 'doraemon-en.jpg', 'available'),
+(8, 'P008-V03', 'Special Edition - Vietnamese', 'special_edition', 'Vietnamese', 'Soft Cover', 'Special Edition', 120000, 20, 'doraemon-special-vn.jpg', 'available'),
 
--- Product 9: A5 Notebook Premium
-(9, 'P009-V01', 'Black Hardcover', 'special_edition', 'Universal', 'Hard Cover', 'Ruled', 180000, 70, 'notebook-black.jpg', 'available'),
-(9, 'P009-V02', 'Brown Hardcover', 'special_edition', 'Universal', 'Hard Cover', 'Dotted', 185000, 55, 'notebook-brown.jpg', 'available'),
-(9, 'P009-V03', 'Blue Hardcover', 'special_edition', 'Universal', 'Hard Cover', 'Plain', 175000, 45, 'notebook-blue.jpg', 'available'),
+-- Product 9: Your Name
+(9, 'P009-V01', 'Paperback - Vietnamese', 'paperback', 'Vietnamese', 'Soft Cover', 'Vietnamese Edition', 105000, 70, 'your-name-vn.jpg', 'available'),
+(9, 'P009-V02', 'Paperback - English', 'paperback', 'English', 'Soft Cover', 'English Edition', 160000, 25, 'your-name-en.jpg', 'available'),
+(9, 'P009-V03', 'Hardcover - Japanese', 'hardcover', 'Japanese', 'Hard Cover', 'Japanese Edition', 260000, 10, 'your-name-jp-hardcover.jpg', 'available'),
 
--- Product 10: Desk Lamp LED Pro
-(10, 'P010-V01', 'White', 'special_edition', 'Universal', NULL, 'Standard', 690000, 26, 'lamp-white.jpg', 'available'),
-(10, 'P010-V02', 'Black', 'special_edition', 'Universal', NULL, 'Standard', 690000, 18, 'lamp-black.jpg', 'available'),
-(10, 'P010-V03', 'Pro Max', 'special_edition', 'Universal', NULL, 'Premium', 990000, 8, 'lamp-promax.jpg', 'available');
+-- Product 10: Harry Potter
+(10, 'P010-V01', 'Paperback - Vietnamese', 'paperback', 'Vietnamese', 'Soft Cover', 'Vietnamese Edition', 150000, 80, 'harry-potter-vn.jpg', 'available'),
+(10, 'P010-V02', 'Paperback - English', 'paperback', 'English', 'Soft Cover', 'English Edition', 220000, 45, 'harry-potter-en.jpg', 'available'),
+(10, 'P010-V03', 'Hardcover - English', 'hardcover', 'English', 'Hard Cover', 'Illustrated Edition', 450000, 12, 'harry-potter-hardcover-en.jpg', 'available');
 
 -- =========================
 -- CARTS
@@ -601,29 +564,29 @@ INSERT INTO carts (customer_id) VALUES
 -- =========================
 -- CART_ITEMS
 -- =========================
-INSERT INTO cart_items (cart_id, version_id, quantity) VALUES
-(1, 1, 2),
-(1, 7, 1),
-(2, 5, 1),
-(2, 17, 1),
-(3, 22, 1),
-(3, 28, 2),
-(4, 10, 1),
-(5, 19, 1),
-(5, 25, 3),
-(6, 30, 1);
+INSERT INTO cart_items (cart_id, version_id, quantity, unit_price) VALUES
+(1, 1, 2, 120000),
+(1, 7, 1, 99000),
+(2, 5, 1, 290000),
+(2, 16, 2, 35000),
+(3, 22, 3, 30000),
+(3, 28, 1, 150000),
+(4, 10, 1, 160000),
+(5, 19, 1, 35000),
+(5, 25, 2, 105000),
+(6, 30, 1, 450000);
 
 -- =========================
 -- ORDERS
 -- =========================
 INSERT INTO orders
-(customer_id, order_status, shipping_address, receiver_name, receiver_phone, processed_by_admin_id, note)
+(customer_id, order_status, shipping_address, receiver_name, receiver_phone, total_amount, processed_by_admin_id, note)
 VALUES
-(4, 'confirmed', '123 Le Loi, District 1, Ho Chi Minh City',          'Le Minh Customer', '0912000001', 2,    'Customer requested fast delivery'),
-(5, 'shipping',  '45 Nguyen Hue, District 1, Ho Chi Minh City',        'Pham Ngoc Lan',    '0912000002', 2,    'Handle with care'),
-(6, 'pending',   '88 Hai Ba Trung, District 3, Ho Chi Minh City',      'Hoang Gia Bao',    '0912000003', NULL, 'Waiting for payment confirmation'),
-(8, 'delivered', '77 Cach Mang Thang 8, District 10, Ho Chi Minh City','Tran Quoc Viet',   '0912000005', 3,    'Delivered successfully'),
-(9, 'cancelled', '21 Phan Xich Long, Phu Nhuan, Ho Chi Minh City',     'Do Minh Anh',      '0912000006', 1,    'Payment failed');
+(4, 'confirmed', '123 Le Loi, District 1, Ho Chi Minh City', 'Le Minh Customer', '0912000001', 339000, 2, 'Customer requested fast delivery'),
+(5, 'shipping', '45 Nguyen Hue, District 1, Ho Chi Minh City', 'Pham Ngoc Lan', '0912000002', 448000, 2, 'Books should be packed carefully'),
+(6, 'pending', '88 Hai Ba Trung, District 3, Ho Chi Minh City', 'Hoang Gia Bao', '0912000003', 360000, NULL, 'Waiting for payment confirmation'),
+(8, 'delivered', '77 Cach Mang Thang 8, District 10, Ho Chi Minh City', 'Tran Quoc Viet', '0912000005', 405000, 3, 'Delivered successfully'),
+(9, 'cancelled', '21 Phan Xich Long, Phu Nhuan, Ho Chi Minh City', 'Do Minh Anh', '0912000006', 450000, 1, 'Payment failed');
 -- =========================
 -- ORDER_ITEMS
 -- =========================
@@ -634,15 +597,18 @@ VALUES
 (1, 7, 'Atomic Habits', 'Paperback - Vietnamese', 99000, 1, 99000),
 
 (2, 5, 'The Pragmatic Programmer', 'Hardcover - English', 290000, 1, 290000),
-(2, 17, 'Wireless Mouse M185', 'Blue Version', 255000, 1, 255000),
-(2, 20, 'Mechanical Keyboard K8', 'RGB - Brown Switch', 1890000, 1, 1890000),
+(2, 13, 'Think and Grow Rich', 'Paperback - Vietnamese', 88000, 1, 88000),
+(2, 16, 'One Piece Vol.1', 'Paperback - Vietnamese', 35000, 2, 70000),
 
-(3, 22, 'USB-C Hub 7 in 1', 'Space Grey', 790000, 1, 790000),
+(3, 22, 'Doraemon Vol.1', 'Paperback - Vietnamese', 30000, 3, 90000),
+(3, 28, 'Harry Potter and the Sorcerer''s Stone', 'Paperback - Vietnamese', 150000, 1, 150000),
+(3, 24, 'Doraemon Vol.1', 'Special Edition - Vietnamese', 120000, 1, 120000),
 
-(4, 13, 'Think and Grow Rich', 'Paperback - Vietnamese', 88000, 2, 176000),
-(4, 26, 'A5 Notebook Premium', 'Brown Hardcover', 185000, 1, 185000),
+(4, 19, 'Naruto Vol.1', 'Paperback - Vietnamese', 35000, 1, 35000),
+(4, 25, 'Your Name', 'Paperback - Vietnamese', 105000, 2, 210000),
+(4, 10, 'Deep Work', 'Paperback - English', 160000, 1, 160000),
 
-(5, 28, 'Desk Lamp LED Pro', 'White', 690000, 1, 690000);
+(5, 30, 'Harry Potter and the Sorcerer''s Stone', 'Hardcover - English', 450000, 1, 450000);
 
 -- =========================
 -- PAYMENTS
@@ -652,10 +618,10 @@ INSERT INTO payments
 (order_id, payment_method, payment_status, amount, transaction_code, paid_at)
 VALUES
 (1, 'cod', 'pending', 339000, NULL, NULL),
-(2, 'vnpay', 'paid', 2145000, 'VNPAY_20260422_0001', '2026-04-22 09:30:00'),
-(3, 'bank_transfer', 'pending', 790000, NULL, NULL),
-(4, 'momo', 'paid', 360000, 'MOMO_20260422_0002', '2026-04-22 10:20:00'),
-(5, 'credit_card', 'failed', 690000, 'CARD_20260422_0003', NULL);
+(2, 'vnpay', 'paid', 448000, 'VNPAY_20260422_0001', '2026-04-22 09:30:00'),
+(3, 'bank_transfer', 'pending', 360000, NULL, NULL),
+(4, 'momo', 'paid', 405000, 'MOMO_20260422_0002', '2026-04-22 10:20:00'),
+(5, 'credit_card', 'failed', 450000, 'CARD_20260422_0003', NULL);
 
 -- =========================
 -- ORDER_STATUS_HISTORY
@@ -705,134 +671,102 @@ VALUES
 ('Sản phẩm hết hàng có nhập lại không?', 'Tùy từng sản phẩm, hệ thống sẽ cập nhật khi có hàng mới.', 'Product', 1, 3);
 
 
+-- Insert
 
 
+INSERT INTO site_settings (setting_key, setting_value, setting_group) VALUES
+-- General
+('site_name',        'My Book Store',               'general'),
+('site_logo_url',    'logo.png',                    'general'),
+('site_favicon_url', 'favicon.ico',                 'general'),
 
--- =========================================================
--- SOME USEFUL TEST QUERIES
--- =========================================================
+-- Contact (the public page your admin needs to edit)
+('contact_email',    'support@store.com',           'contact'),
+('contact_phone',    '0901000001',                  'contact'),
+('contact_address',  '123 Le Loi, Ho Chi Minh City','contact'),
+('facebook_url',     'https://facebook.com/store',  'social'),
+('zalo_url',         'https://zalo.me/store',       'social'),
 
--- 1. Xem tất cả user + phân loại admin/customer
--- SELECT 
---     u.user_id,
---     u.full_name,
---     u.email,
---     CASE
---         WHEN a.admin_id IS NOT NULL THEN 'Admin'
---         WHEN c.customer_id IS NOT NULL THEN 'Customer'
---         ELSE 'Unknown'
---     END AS user_type
--- FROM users u
--- LEFT JOIN admins a ON u.user_id = a.admin_id
--- LEFT JOIN customers c ON u.user_id = c.customer_id;
+-- SEO
+('meta_title',       'My Book Store - Nhà sách trực tuyến', 'seo'),
+('meta_description', 'Mua sách lập trình, sách kỹ năng, manga, light novel và tiểu thuyết.', 'seo');
 
--- 2. Xem customer đang hoạt động / bị ban
--- SELECT 
---     u.full_name,
---     u.email,
---     c.customer_status
--- FROM customers c
--- JOIN users u ON c.customer_id = u.user_id;
+-- =========================
+-- FLASH SALES
+-- =========================
+INSERT INTO flash_sales 
+(flash_sale_name, flash_sale_description, flash_sale_image, flash_sale_start_time, flash_sale_end_time, flash_sale_is_active) 
+VALUES
+('Ngày Sách Việt Nam 2026', 'Giảm giá sách nhân ngày Sách Việt Nam', 'flash-sale-book-day.jpg', '2026-04-21 00:00:00', '2026-04-21 23:59:59', FALSE),
+('Flash Sale Cuối Tuần', 'Flash sale cuối tuần cho sách bán chạy', 'flash-sale-weekend-books.jpg', '2026-05-10 18:00:00', '2026-05-10 22:00:00', TRUE),
+('Manga & Light Novel Deal', 'Ưu đãi đặc biệt cho manga và light novel', 'flash-sale-manga-novel.jpg', '2026-06-01 00:00:00', '2026-06-01 23:59:59', TRUE);
 
--- 3. Xem admin cấp cao
--- SELECT 
---     u.full_name,
---     a.salary,
---     a.is_super_admin
--- FROM admins a
--- JOIN users u ON a.admin_id = u.user_id;
+-- =========================
+-- FLASH SALE PRODUCTS
+-- Note: using version_id is better here — consider refactoring
+-- For now, inserting against product_id as schema currently stands
+-- =========================
+INSERT INTO flash_sale_products 
+(flash_sale_id, version_id, sale_price, stock_allocated, stock_sold) 
+VALUES
+-- Ngày Sách Việt Nam
+(1, 1, 89000, 30, 30),
+(1, 4, 140000, 20, 15),
+(1, 7, 75000, 50, 42),
+(1, 13, 65000, 40, 40),
 
--- 4. Xem product và category
--- SELECT
---     p.product_id,
---     p.product_name,
---     c.category_name
--- FROM product_categories pc
--- JOIN products p ON pc.product_id = p.product_id
--- JOIN categories c ON pc.category_id = c.category_id
--- ORDER BY p.product_id, c.category_name;
+-- Flash Sale Cuối Tuần
+(2, 7, 79000, 30, 8),
+(2, 10, 120000, 25, 3),
+(2, 16, 29000, 50, 12),
+(2, 25, 85000, 30, 5),
 
--- 5. Xem tất cả version của product
--- SELECT
---     p.product_name,
---     pv.version_name,
---     pv.format_type,
---     pv.price,
---     pv.stock_quantity,
---     pv.version_status
--- FROM product_versions pv
--- JOIN products p ON pv.product_id = p.product_id
--- ORDER BY p.product_id, pv.version_id;
+-- Manga & Light Novel Deal
+(3, 16, 30000, 60, 10),
+(3, 19, 30000, 50, 8),
+(3, 22, 25000, 70, 15),
+(3, 28, 120000, 40, 3);
 
--- 6. Xem cart của customer
--- SELECT
---     u.full_name AS customer_name,
---     ca.cart_id,
---     p.product_name,
---     pv.version_name,
---     ci.quantity,
---     pv.price
--- FROM carts ca
--- JOIN customers c ON ca.customer_id = c.customer_id
--- JOIN users u ON c.customer_id = u.user_id
--- JOIN cart_items ci ON ca.cart_id = ci.cart_id
--- JOIN product_versions pv ON ci.version_id = pv.version_id
--- JOIN products p ON pv.product_id = p.product_id
--- ORDER BY ca.cart_id;
+-- =========================
+-- PRODUCT SECTIONS
+-- =========================
+INSERT INTO product_section 
+(section_name, section_image, section_status, section_description) 
+VALUES
+('Sách Nổi Bật', 'banner-featured-books.jpg', 1, 'Tuyển chọn những cuốn sách được yêu thích nhất'),
+('Sách Lập Trình', 'banner-programming-books.jpg', 1, 'Các đầu sách dành cho lập trình viên'),
+('Manga & Light Novel', 'banner-manga-novel.jpg', 1, 'Truyện tranh và light novel nổi bật'),
+('Mới Về Hôm Nay', 'banner-new-arrivals.jpg', 1, 'Sản phẩm mới nhất vừa cập nhật');
 
--- 7. Xem chi tiết order
--- SELECT
---     o.order_id,
---     u.full_name AS customer_name,
---     o.order_status,
---     oi.product_name_snapshot,
---     oi.version_name_snapshot,
---     oi.unit_price,
---     oi.quantity,
---     oi.subtotal
--- FROM orders o
--- JOIN customers c ON o.customer_id = c.customer_id
--- JOIN users u ON c.customer_id = u.user_id
--- JOIN order_items oi ON o.order_id = oi.order_id
--- ORDER BY o.order_id, oi.order_item_id;
+-- =========================
+-- PRODUCT SECTION DETAILS
+-- =========================
+INSERT INTO product_section_details 
+(section_id, product_id, display_order) 
+VALUES
+-- Sách Nổi Bật
+(1, 1, 1),
+(1, 2, 2),
+(1, 3, 3),
+(1, 9, 4),
+(1, 10, 5),
 
--- 8. Xem payment của order
--- SELECT
---     o.order_id,
---     u.full_name AS customer_name,
---     p.payment_method,
---     p.payment_status,
---     p.amount,
---     p.transaction_code,
---     p.paid_at
--- FROM payments p
--- JOIN orders o ON p.order_id = o.order_id
--- JOIN customers c ON o.customer_id = c.customer_id
--- JOIN users u ON c.customer_id = u.user_id
--- ORDER BY o.order_id;
+-- Sách Lập Trình
+(2, 1, 1),
+(2, 2, 2),
 
--- 9. Xem lịch sử trạng thái đơn hàng
--- SELECT
---     osh.order_id,
---     osh.old_status,
---     osh.new_status,
---     osh.changed_at,
---     admin_user.full_name AS changed_by,
---     osh.note
--- FROM order_status_history osh
--- LEFT JOIN admins a ON osh.changed_by_admin_id = a.admin_id
--- LEFT JOIN users admin_user ON a.admin_id = admin_user.user_id
--- ORDER BY osh.order_id, osh.changed_at;
+-- Manga & Light Novel
+(3, 6, 1),
+(3, 7, 2),
+(3, 8, 3),
+(3, 9, 4),
 
--- 10. Xem contact messages
--- SELECT
---     ct.contact_id,
---     ct.full_name,
---     ct.email,
---     ct.subject,
---     ct.contact_status,
---     u.full_name AS handled_by
--- FROM contacts ct
--- LEFT JOIN admins a ON ct.handled_by_admin_id = a.admin_id
--- LEFT JOIN users u ON a.admin_id = u.user_id
--- ORDER BY ct.contact_id;
+-- Mới Về Hôm Nay
+(4, 10, 1),
+(4, 9, 2),
+(4, 8, 3);
+
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+

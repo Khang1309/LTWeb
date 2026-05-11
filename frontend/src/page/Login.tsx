@@ -8,7 +8,7 @@ import {
   isValidPassword,
   PASSWORD_MIN_LENGTH,
 } from "@/lib/validators";
-
+import { Eye, EyeOff } from "lucide-react";
 function Login() {
   const navigate = useNavigate();
   const login = useUserStore((s) => s.login);
@@ -17,6 +17,7 @@ function Login() {
 
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -78,13 +79,24 @@ function Login() {
           onChange={(e) => setIdentifier(e.target.value)}
         />
 
-        <input
-          className="w-full border rounded-lg px-4 py-2 mb-4"
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div className="relative mb-4">
+          <input
+            className="w-full border rounded-lg px-4 py-2 pr-16"
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-900"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
 
         <button
           type="submit"
