@@ -25,7 +25,7 @@ function FAQ() {
 
   return (
     <>
-      <div className="bg-blue-400 m-0 flex flex-col gap-4 p-10">
+      <div className="bg-blue-400 m-0 text-white flex flex-col gap-4 p-10">
         <h1 className="m-0">Frequently Asked Questions</h1>
         <p>
           Find answers to the most common questions.

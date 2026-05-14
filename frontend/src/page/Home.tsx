@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, BookOpen, Headphones, ShieldCheck, Truck } from "lucide-react";
 
-import hero from "@/assets/hero.png";
+import hero from "@/assets/hero.jpeg";
 import { Button } from "@/components/ui/button";
 
 const highlights = [

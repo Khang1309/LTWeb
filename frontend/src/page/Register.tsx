@@ -9,7 +9,7 @@ import {
   PASSWORD_MIN_LENGTH,
 } from "@/lib/validators";
 
-function Register() {
+function Register({ onDone }: { onDone: () => void }) {
   const navigate = useNavigate();
   const { toast, showToast } = useToast();
 
@@ -94,25 +94,24 @@ function Register() {
       showToast("Registration successful. Please log in.", "success");
 
       setTimeout(() => {
-        navigate("/login");
+        onDone();
       }, 800);
     } catch (err: any) {
       showToast(
         err.response?.data?.message ||
-          err.message ||
-          "Could not connect to the server.",
+        err.message ||
+        "Could not connect to the server.",
         "error"
       );
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100 px-4 py-8">
+    <div className=" flex items-center justify-center px-4 ">
       <form
         onSubmit={handleRegister}
-        className="w-full max-w-md bg-white p-8 rounded-xl shadow"
+        className="w-full max-w-md bg-white p-8 rounded-xl "
       >
-        <h1 className="text-2xl font-bold text-center mb-6">Register</h1>
 
         <input
           name="full_name"
@@ -179,17 +178,9 @@ function Register() {
 
         <button
           type="submit"
-          className="w-full bg-slate-900 text-white rounded-lg py-2"
+          className="w-full bg-(--color-brand) text-white rounded-lg py-2"
         >
           Register
-        </button>
-
-        <button
-          type="button"
-          onClick={() => navigate("/login")}
-          className="w-full mt-4 text-blue-600 text-sm"
-        >
-          Already have an account? Login
         </button>
       </form>
 

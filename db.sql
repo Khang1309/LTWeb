@@ -767,6 +767,6 @@ VALUES
 (4, 8, 3);
 
 
-SET FOREIGN_KEY_CHECKS = 1;
+
 
 

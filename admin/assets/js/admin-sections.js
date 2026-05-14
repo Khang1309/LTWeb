@@ -186,7 +186,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 body: formData
             });
 
-            const result = await response.json();
+            const text = await response.text();
+            let result;
+            try {
+                const jsonStart = text.indexOf('{');
+                if (jsonStart !== -1) {
+                    result = JSON.parse(text.substring(jsonStart));
+                } else {
+                    result = JSON.parse(text);
+                }
+            } catch (e) {
+                throw new Error("Lỗi server: " + text);
+            }
 
             if (!result.success) {
                 showSectionMessage(result.message || "Lưu thất bại", "danger");

@@ -64,12 +64,12 @@ export function Navbar() {
           </NavigationMenuItem>
 
           <NavigationMenuItem>
-            <NavigationMenuTrigger>
-              <NavigationMenuLink asChild>
-                <NavMenuLink name="PRODUCTS" to="/products" />
-              </NavigationMenuLink>
-            </NavigationMenuTrigger>
-            <NavigationMenuContent>
+
+            <NavigationMenuLink asChild>
+              <NavMenuLink name="PRODUCTS" to="/products" />
+            </NavigationMenuLink>
+
+            {/* <NavigationMenuContent>
               <ul className="grid w-[420px] gap-2 p-2 md:w-[560px] md:grid-cols-2">
                 {productLinks.map((item) => (
                   <ListItem key={item.title} title={item.title} href={item.href}>
@@ -77,24 +77,16 @@ export function Navbar() {
                   </ListItem>
                 ))}
               </ul>
-            </NavigationMenuContent>
+            </NavigationMenuContent> */}
           </NavigationMenuItem>
 
           <NavigationMenuItem>
-            <NavigationMenuTrigger>
-              <NavigationMenuLink asChild>
-                <NavMenuLink name="ABOUT US" to="/about" />
-              </NavigationMenuLink>
-            </NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="w-96 p-2">
-                {supportLinks.map((item) => (
-                  <ListItem key={item.title} title={item.title} href={item.href}>
-                    {item.description}
-                  </ListItem>
-                ))}
-              </ul>
-            </NavigationMenuContent>
+
+            <NavigationMenuLink asChild>
+              <NavMenuLink name="ABOUT US" to="/about" />
+            </NavigationMenuLink>
+
+
           </NavigationMenuItem>
 
           <NavigationMenuItem>

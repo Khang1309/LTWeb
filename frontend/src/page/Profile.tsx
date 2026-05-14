@@ -264,10 +264,10 @@ function Profile() {
 
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-10">
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-6xl ">
         <Card className="rounded-2xl shadow-md">
-          <CardHeader className="border-b">
-            <CardTitle className="text-center text-3xl font-bold">
+          <CardHeader className="">
+            <CardTitle className="text-center text-3xl font-bold mt-4">
               Thông tin khách hàng
             </CardTitle>
           </CardHeader>
@@ -346,7 +346,7 @@ function Profile() {
                 </div>
               </div>
 
-              <div className="flex flex-col justify-end gap-3 border-t pt-6 sm:flex-row">
+              <div className="flex flex-col justify-end gap-3  pt-6 sm:flex-row">
                 <Button
                   type="button"
                   variant="outline"
@@ -363,8 +363,8 @@ function Profile() {
 
         {showChangePassword && (
           <Card className="mt-6 rounded-2xl shadow-md">
-            <CardHeader className="border-b">
-              <CardTitle className="text-center text-2xl font-bold">
+            <CardHeader className="">
+              <CardTitle className="text-center text-2xl font-bold mt-4">
                 Đổi mật khẩu
               </CardTitle>
             </CardHeader>

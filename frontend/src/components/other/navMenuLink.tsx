@@ -3,8 +3,14 @@ import { NavLink } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
 
-// Sử dụng React.forwardRef để nhận ref từ NavigationMenuLink
-const NavMenuLink = React.forwardRef<HTMLAnchorElement, { name: string; to?: string }>(
+interface NavMenuLinkProps {
+    name: string;
+    to?: string;
+    active?: boolean;
+    onClick?: React.MouseEventHandler<HTMLAnchorElement>; // Thêm kiểu cho onClick ở đây
+}
+
+export const NavMenuLink = React.forwardRef<HTMLAnchorElement, NavMenuLinkProps>(
     ({ name, to = "/", ...props }, ref) => {
         return (
             <NavLink
@@ -15,7 +21,7 @@ const NavMenuLink = React.forwardRef<HTMLAnchorElement, { name: string; to?: str
                     cn(
                         navigationMenuTriggerStyle(),
                         "group/nav relative flex flex-col items-start h-auto py-2",
-                        isActive && "text-(--color-brand)"
+                        (isActive || props.active) && "text-(--color-brand)"
                     )
                 }
             >
@@ -26,7 +32,7 @@ const NavMenuLink = React.forwardRef<HTMLAnchorElement, { name: string; to?: str
                             className={cn(
                                 "w-full h-0.5 bg-(--color-brand) transition-all duration-300",
                                 "group-hover/nav:opacity-100",
-                                isActive ? "opacity-100" : "opacity-0"
+                                (isActive || props.active) ? "opacity-100" : "opacity-0"
                             )}
                         />
                     </>

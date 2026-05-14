@@ -1,6 +1,6 @@
 import Autoplay from "embla-carousel-autoplay";
-import { Divide, Eye, Flame, RotateCcw, Search, ShoppingCart, Sparkles, Zap } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Eye, Flame, RotateCcw, Search, ShoppingCart } from "lucide-react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
 import { getImageUrl, getProductDetailApi, getProductsApi } from "@/apis/productApi";
@@ -82,7 +82,7 @@ function Products() {
   const plugin = useRef(Autoplay({ delay: 3500, stopOnInteraction: true }));
 
   const activeFlashSales = useMemo(
-    () => flashSales.filter((sale) => sale.products?.length > 0),
+    () => flashSales,
     [flashSales]
   );
 
@@ -191,18 +191,29 @@ function Products() {
     showToast("Added to cart.", "success");
   };
 
-  const itemsRef = useRef(new Map());
+  const itemsRef = useRef<Map<string, HTMLElement>>(new Map());
 
+  const setItemRef = useCallback(
+    (id: string) => (node: HTMLElement | null) => {
+      if (node) {
+        itemsRef.current.set(id, node);
+      } else {
+        itemsRef.current.delete(id);
+      }
+    },
+    []
+  );
 
-  // 2. A reusable function that takes a ref and scrolls to it
-  const scrollToCategoryId = (id: any) => {
-    // Get the exact HTML node from our Map dictionary
+  const scrollToCategoryId = (id: string) => {
     const node = itemsRef.current.get(id);
+
     if (node) {
-      node.scrollIntoView({ behavior: "smooth", block: "start" });
+      node.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }
   };
-
   const renderProductCard = (
     item: ProductVersion,
     options: { compact?: boolean; salePrice?: number } = {}
@@ -371,7 +382,7 @@ function Products() {
             <CarouselContent className="-ml-3 pb-2 gap-4 flex items-center justify-center">
 
               {activeFlashSales.map((sale) => (
-                <CarouselItem key={sale.flash_sale_id} className="pl-3 basis-auto"
+                <CarouselItem key={sale.flash_sale_id} className="pl-3 basis-auto cursor-pointer"
                   onClick={() => scrollToCategoryId(sale.flash_sale_name)}>
                   <img
                     src={getImageUrl(sale.flash_sale_image)}
@@ -391,7 +402,7 @@ function Products() {
 
               {/* Mapped Category Items */}
               {sections.map((sec) => (
-                <CarouselItem key={sec.section_id} className="pl-3 basis-auto"
+                <CarouselItem key={sec.section_id} className="pl-3 basis-auto cursor-pointer"
                   onClick={() => scrollToCategoryId(sec.section_name)}>
                   <img
                     src={getImageUrl(sec.section_image)}
@@ -424,13 +435,7 @@ function Products() {
 
       {activeFlashSales.map((sale) => (
         <section key={sale.flash_sale_id} className="scroll-mt-24  w-full bg-gradient-to-r from-red-600 to-orange-500 p-5 text-left shadow-xl md:p-8 my-4"
-          ref={(node) => {
-            if (node) {
-              itemsRef.current.set(sale.flash_sale_name, node);
-            } else {
-              itemsRef.current.delete(sale.flash_sale_name);
-            }
-          }}>
+          ref={setItemRef(sale.flash_sale_name)}>
           <div className="mb-6 flex flex-col gap-4 text-white md:flex-row md:items-end md:justify-between">
             <div className="flex gap-2">
               <div className="mb-2 flex items-center gap-2">
@@ -445,7 +450,7 @@ function Products() {
             </div>
             <div className="text-xl font-bold text-white/90 flex justify-center items-center gap-4">
               {
-                (new Date().getTime() <= new Date(sale.flash_sale_end_time).getTime()) ?
+                (new Date().getTime() <= new Date(sale.flash_sale_start_time).getTime()) ?
                   <>
                     <div>Start In</div>
                     <TimeCounter targetDate={new Date(sale.flash_sale_start_time)} />
@@ -466,7 +471,7 @@ function Products() {
             opts={{ align: "start", dragFree: true }}
           >
             <CarouselContent className="-ml-4">
-              {sale.products.map(renderFlashProduct)}
+              {(sale.products || []).map(renderFlashProduct)}
             </CarouselContent>
             <CarouselPrevious className="hidden border-0 bg-white/20 text-white hover:bg-white hover:text-red-700 lg:flex" />
             <CarouselNext className="hidden border-0 bg-white/20 text-white hover:bg-white hover:text-red-700 lg:flex" />
@@ -477,13 +482,7 @@ function Products() {
       <div className="mx-auto max-w-7xl px-4 py-10 md:px-8 lg:px-12">
         {sections.map((section) => (
           <div className="my-4">
-            <div ref={(node) => {
-              if (node) {
-                itemsRef.current.set(section.section_name, node);
-              } else {
-                itemsRef.current.delete(section.section_name);
-              }
-            }} className="relative bg-blue-600 p-4 rounded-t-3xl text-white w-[33%] mx-auto">
+            <div ref={setItemRef(section.section_name)} className="relative bg-blue-600 p-4 rounded-t-3xl text-white w-[70%] md:w-[50%] lg:w-[40%] mx-auto">
               <div className="relative z-10 scroll-mt-30 ">
 
                 <h2 className="m-0 text-3xl font-extrabold text-white">{section.section_name}</h2>

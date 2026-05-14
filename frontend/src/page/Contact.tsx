@@ -37,7 +37,7 @@ function Contact() {
   return (
     <div className="flex">
 
-      <div style={{ maxWidth: 600, margin: "40px auto", padding: "0 20px" }}>
+      <div className="p-8 shadow m-4" style={{ maxWidth: 600 }}>
         <h1 style={{ marginBottom: 8 }}>Contact</h1>
         <p style={{ color: "#666", marginBottom: 24 }}>
           Send us a message and we will respond as soon as possible.
@@ -96,7 +96,7 @@ function Contact() {
         </form>
       </div>
       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.0926371280025!2d106.80281137581046!3d10.880558489274618!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174d8a5568c997f%3A0xdeac05f17a166e0c!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBCw6FjaCBraG9hIC0gxJBIUUcgVFAuSENN!5e0!3m2!1svi!2s!4v1778403296306!5m2!1svi!2s"
-        width="600" height="800" loading="lazy"></iframe>
+        width="600" height="800" loading="lazy" className="flex-1"></iframe>
     </div>
   );
 }

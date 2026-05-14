@@ -426,7 +426,18 @@ async function uploadProductImageIfNeeded() {
         body: formData
     });
 
-    const result = await response.json();
+    const text = await response.text();
+    let result;
+    try {
+        const jsonStart = text.indexOf('{');
+        if (jsonStart !== -1) {
+            result = JSON.parse(text.substring(jsonStart));
+        } else {
+            result = JSON.parse(text);
+        }
+    } catch (e) {
+        throw new Error("Lỗi server: " + text);
+    }
 
     if (!result.success) {
         throw new Error(result.message || "Upload ảnh thất bại");
